@@ -1,4 +1,4 @@
-package eu.psandro.tsjames.model;
+package eu.psandro.tsjames.bot.model;
 
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;

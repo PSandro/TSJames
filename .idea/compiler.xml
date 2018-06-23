@@ -6,8 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="tsjames" />
+        <module name="tsjames-bot" />
+        <module name="tsjames-api" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="tsjamesbot" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

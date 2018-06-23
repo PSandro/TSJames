@@ -1,7 +1,6 @@
-package eu.psandro.tsjames.model;
+package eu.psandro.tsjames.bot.model;
 
 
-import java.util.Optional;
 import java.util.concurrent.Future;
 
 public abstract class ConfigManager {
