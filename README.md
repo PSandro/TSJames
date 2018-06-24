@@ -1,5 +1,8 @@
 # TS James
 TS James is a simple standalone bot connected to a TeamSpeak³ Server in order to handle AFK users, rank promotes and stuff like that.
+
+_Master_ [![Build Status](https://travis-ci.org/PSandro/TSJames.svg?branch=master)](https://travis-ci.org/PSandro/TSJames)
+
 # Features
   - Nothing yet lol
 ### Planned Features
