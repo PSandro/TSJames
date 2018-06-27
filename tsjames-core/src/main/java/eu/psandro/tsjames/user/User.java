@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Getter
 @Entity
 @Table(name = "james_user")
-public abstract class User {
+public class User {
 
     @Id
     @GeneratedValue(generator = "increment")
@@ -22,10 +22,19 @@ public abstract class User {
     private final int userId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "creation")
+    @Column(name = "creation", nullable = false)
     private final Timestamp creation;
 
-    @Column(name = "pseudonym")
+    @Column(name = "pseudonym", nullable = false)
     private String pseudonym;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = true)
+    private UserData userData;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = true)
+    private UserLog userLog;
+
 
 }
