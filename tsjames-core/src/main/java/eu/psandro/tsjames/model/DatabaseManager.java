@@ -3,6 +3,7 @@ package eu.psandro.tsjames.model;
 import eu.psandro.tsjames.api.exception.JamesNotInitException;
 import eu.psandro.tsjames.rank.RankData;
 import eu.psandro.tsjames.user.*;
+import lombok.NonNull;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
