@@ -1,32 +1,39 @@
 package eu.psandro.tsjames.user;
 
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 @Table(name = "james_user")
-public class User {
+@EqualsAndHashCode
+public class User implements Serializable {
+
+    User() {
+    }
 
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
-    @Column(name = "user_id")
-    private final int userId;
+    @Column(name = "user_id", unique = true, nullable = false)
+    private int userId;
 
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "creation", nullable = false)
-    private final Timestamp creation;
+    @Column(name = "creation")
+    private Date creation;
 
-    @Column(name = "pseudonym", nullable = false)
-    private String pseudonym;
+    @Column(name = "username", nullable = false, unique = true)
+    @Setter
+    private String username;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = true)

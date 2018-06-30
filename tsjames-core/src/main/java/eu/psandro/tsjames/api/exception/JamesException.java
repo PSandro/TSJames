@@ -1,6 +1,6 @@
 package eu.psandro.tsjames.api.exception;
 
-public class JamesException extends Exception {
+public class JamesException extends RuntimeException {
 
     public JamesException(String message) {
         super(message);

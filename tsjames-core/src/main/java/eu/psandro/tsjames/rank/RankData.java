@@ -2,25 +2,26 @@ package eu.psandro.tsjames.rank;
 
 
 import eu.psandro.tsjames.user.UserRank;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
 @Table(name = "rank_indicies")
-public final class RankData {
+@EqualsAndHashCode
+public final class RankData implements Serializable {
+
+    RankData() {
+    }
 
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
-    @JoinColumn(name = "rank_id")
-    private final UserRank rank;
+    private int rankId;
 
     @Setter
     @Column(name = "simple_name")
