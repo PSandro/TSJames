@@ -1,15 +1,13 @@
 package eu.psandro.tsjames.user;
 
+import eu.psandro.tsjames.model.DatabaseManager;
 import eu.psandro.tsjames.rank.RankData;
 import eu.psandro.tsjames.test.RepositoryUtil;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,50 +15,67 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
 
-    private static SessionFactory sessionFactory;
+    private static DatabaseManager databaseManager;
 
     @BeforeAll
     static void setUp() {
-        sessionFactory = RepositoryUtil.createTestSessionFactory(User.class, UserData.class, UserLog.class, UserRank.class, RankData.class);
+        databaseManager = RepositoryUtil.createTestDatabaseManager(User.class, UserData.class, UserLog.class, UserRank.class, RankData.class);
     }
 
     @AfterAll
-    static void tearDown() {
-        sessionFactory.close();
+    static void tearDown() throws IOException {
+        databaseManager.close();
     }
 
 
     @Test
     public void testUserInsertion() {
-        final Session session = this.sessionFactory.openSession();
-        Transaction insertTransaction = null;
-        Transaction fetchTransacton = null;
 
-        try {
-            insertTransaction = session.beginTransaction();
-            final User user = UserFactory.createUser();
-            user.setUsername("Test");
-            final Integer userId = (Integer) session.save(user);
-            insertTransaction.commit();
+        final String username = "test";
 
-            fetchTransacton = session.beginTransaction();
-            final User fetchedUser = session.get(User.class, userId);
-            fetchTransacton.commit();
+        final User user = databaseManager.createUser(username);
 
-            assertEquals(userId.intValue(), fetchedUser.getUserId());
-            assertEquals(user.getUsername(), fetchedUser.getUsername());
-            assertEquals(user.getUserData(), fetchedUser.getUserData());
-            assertEquals(user.getUserLog(), fetchedUser.getUserLog());
+        assertEquals(username, user.getUsername());
+        assertTrue(user.getCreation().getTime() <= System.currentTimeMillis());
 
-            assertTrue(fetchedUser.getCreation().before(new Date()));
+    }
 
-        } catch (HibernateException e) {
-            if (insertTransaction != null) insertTransaction.rollback();
-            if (fetchTransacton != null) fetchTransacton.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
+    @Test
+    public void testUserGetByUsername() {
+
+        final String username = "hallo123";
+
+        final User user = databaseManager.createUser(username);
+        final User fetchedUser = databaseManager.getUser(username);
+
+        assertEquals(user, fetchedUser);
+
+    }
+
+    @Test
+    public void testUserGetById() {
+
+        final String username = "test5678";
+
+        final User user = databaseManager.createUser(username);
+        final User fetchedUser = databaseManager.getUser(user.getUserId());
+
+        assertEquals(user, fetchedUser);
+
+    }
+
+    @Test
+    public void testUpdateUsername() {
+
+        final String username = "huhu789";
+
+        final User user = databaseManager.createUser(username);
+        databaseManager.updateUsername(user.getUserId(), "huhu89");
+        final User fetchedUser = databaseManager.getUser(user.getUserId());
+        assertNotEquals(user, fetchedUser);
+
+        assertEquals(user.getUserId(), fetchedUser.getUserId());
+        assertEquals(user.getCreation(), fetchedUser.getCreation());
 
     }
 }

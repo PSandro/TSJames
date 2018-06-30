@@ -4,6 +4,7 @@ package eu.psandro.tsjames.user;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,11 +27,12 @@ public class User implements Serializable {
     @Column(name = "user_id", unique = true, nullable = false)
     private int userId;
 
-    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "creation")
+    @Column(name = "creation", nullable = false)
+    @Setter(AccessLevel.PROTECTED)
     private Date creation;
 
+    @NaturalId(mutable = true)
     @Column(name = "username", nullable = false, unique = true)
     @Setter
     private String username;
