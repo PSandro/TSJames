@@ -2,13 +2,11 @@ package eu.psandro.tsjames.user;
 
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,29 +19,31 @@ public class User implements Serializable {
     User() {
     }
 
+
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
-    @Column(name = "user_id", unique = true, nullable = false)
-    private int userId;
+    @Column(name = "user_id", unique = true, nullable = false, insertable = true, updatable = false)
+    private long userId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "creation", nullable = false)
+    @Column(name = "creation", nullable = false, insertable = true)
     @Setter(AccessLevel.PROTECTED)
     private Date creation;
 
     @NaturalId(mutable = true)
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true, insertable = true)
     @Setter
     private String username;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "data_id", unique = true)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
     private UserData userData;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = true)
-    private UserLog userLog;
-
+    protected User(@NonNull Date creation, @NonNull String username, @NonNull UserData userData) {
+        this.creation = creation;
+        this.username = username;
+        this.userData = userData;
+    }
 
 }

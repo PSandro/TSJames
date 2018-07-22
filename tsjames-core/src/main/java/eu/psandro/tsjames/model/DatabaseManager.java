@@ -13,8 +13,8 @@ public interface DatabaseManager extends Closeable {
 
     User getUser(String username);
 
-    User getUser(Integer userId);
+    User getUser(Long userId);
 
-    void updateUsername(int userId, String username);
+    void updateUsername(long userId, String username);
 
 }

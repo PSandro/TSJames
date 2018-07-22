@@ -33,15 +33,13 @@ public final class DatabaseManagerImpl implements DatabaseManager {
         settings.setProperty(Environment.PASS, accessData.getPassword());
         settings.setProperty(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
         settings.setProperty(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
-        settings.setProperty(Environment.HBM2DDL_AUTO, "create"); //TODO: need to change to "update" after debugging
-        settings.setProperty(Environment.SHOW_SQL, "true");
+        settings.setProperty(Environment.HBM2DDL_AUTO, "update");
+        settings.setProperty(Environment.SHOW_SQL, "false");
 
         final SessionFactory sessionFactory = new Configuration()
                 .addProperties(settings)
                 .addAnnotatedClass(User.class)
-                .addAnnotatedClass(UserData.class)
                 .addAnnotatedClass(UserFactory.class)
-                .addAnnotatedClass(UserLog.class)
                 .addAnnotatedClass(UserRank.class)
                 .addAnnotatedClass(RankData.class)
                 .buildSessionFactory();
@@ -57,27 +55,20 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     public User createUser(@NonNull String username) {
         final Session session = this.openSession();
         final User user = UserFactory.createUser(username);
-        Transaction insertTransaction = null;
-        Transaction fetchTransacton = null;
-        User fetchedUser = null;
+        Transaction transaction = null;
 
         try {
-            insertTransaction = session.beginTransaction();
-            final Integer userId = (Integer) session.save(user);
-            insertTransaction.commit();
-
-            fetchTransacton = session.beginTransaction();
-            fetchedUser = session.get(User.class, userId);
-            fetchTransacton.commit();
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(user);
+            transaction.commit();
 
         } catch (HibernateException e) {
-            if (insertTransaction != null) insertTransaction.rollback();
-            if (fetchTransacton != null) fetchTransacton.rollback();
+            if (transaction != null) transaction.rollback();
             e.printStackTrace();
         } finally {
             session.close();
         }
-        return fetchedUser;
+        return user;
     }
 
     @Override
@@ -103,7 +94,7 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
-    public User getUser(Integer userId) {
+    public User getUser(Long userId) {
         final Session session = this.openSession();
         Transaction fetchTransacton = null;
         User fetchedUser = null;
@@ -124,7 +115,7 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
-    public void updateUsername(int userId, String username) {
+    public void updateUsername(long userId, String username) {
         final Session session = this.openSession();
         Transaction transaction = null;
 

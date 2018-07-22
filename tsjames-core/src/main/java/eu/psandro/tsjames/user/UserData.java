@@ -6,20 +6,21 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
 @Getter
 @EqualsAndHashCode
-@Table(name = "user_data")
+@Entity
+@Table(name = "james_user_data")
 public final class UserData implements Serializable {
 
-    UserData(){}
+    protected UserData() {
+    }
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
     @Id
-    private User user;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "data_id")
+    private long dataId;
 
     @Setter
-    @Column(name = "teamspeak_id")
+    @Column(name = "teamspeak_id", nullable = true, insertable = true, updatable = true)
     private String teamspeakId;
 }

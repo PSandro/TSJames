@@ -1,7 +1,6 @@
 package eu.psandro.tsjames.rank;
 
 
-import eu.psandro.tsjames.user.UserRank;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 

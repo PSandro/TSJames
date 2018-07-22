@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +18,7 @@ class UserTest {
 
     @BeforeAll
     static void setUp() {
-        databaseManager = RepositoryUtil.createTestDatabaseManager(User.class, UserData.class, UserLog.class, UserRank.class, RankData.class);
+        databaseManager = RepositoryUtil.createTestDatabaseManager(User.class, UserData.class, UserRank.class, RankData.class);
     }
 
     @AfterAll
