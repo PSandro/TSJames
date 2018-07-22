@@ -12,12 +12,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+
 public final class FileConfigManager extends ConfigManager {
 
     private static final File FOLDER = new File("config");
     private final ExecutorService executor = Executors.newCachedThreadPool();
     private static final Charset CHARSET = Charset.forName("UTF-8");
     private final JsonParser parser = new JsonParser();
+
+
+    public FileConfigManager() {
+        this.createFolder();
+    }
 
     private boolean createFolder() {
         if (!FOLDER.exists()) {
