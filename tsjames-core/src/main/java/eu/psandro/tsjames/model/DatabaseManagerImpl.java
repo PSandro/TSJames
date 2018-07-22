@@ -20,7 +20,8 @@ import java.util.Properties;
 public final class DatabaseManagerImpl implements DatabaseManager {
 
 
-    private Optional<SessionFactory> sessionFactory;
+    private @NonNull
+    Optional<SessionFactory> sessionFactory = Optional.empty();
 
     public DatabaseManagerImpl() {
     }
@@ -133,6 +134,11 @@ public final class DatabaseManagerImpl implements DatabaseManager {
         }
     }
 
+    @Override
+    public boolean isOpen() {
+        return this.sessionFactory.isPresent() && this.sessionFactory.get().isOpen();
+    }
+
 
     private Session openSession() throws JamesNotInitException {
         return this.sessionFactory.orElseThrow(() -> new JamesNotInitException("SessionFactory")).openSession();
@@ -142,5 +148,6 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     @Override
     public void close() {
         this.sessionFactory.ifPresent(SessionFactory::close);
+        this.sessionFactory = Optional.empty();
     }
 }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -22,10 +23,10 @@ public final class FileConfigManager extends ConfigManager {
 
 
     public FileConfigManager() {
-        this.createFolder();
     }
 
-    private boolean createFolder() {
+    @Override
+    public boolean createSources() {
         if (!FOLDER.exists()) {
             this.executor.execute(() -> FOLDER.mkdir());
             return false;
@@ -33,7 +34,13 @@ public final class FileConfigManager extends ConfigManager {
         return true;
     }
 
+    @Override
+    public boolean existsConfig(ConfigFile configFile) {
+        return this.getPath(configFile).toFile().exists();
+    }
 
+
+    @Override
     public synchronized void saveConfig(ConfigFile configFile) {
         this.executor.execute(() -> {
             final Path path = FileConfigManager.this.getPath(configFile);
@@ -47,14 +54,19 @@ public final class FileConfigManager extends ConfigManager {
     }
 
     @Override
-    public synchronized <T extends ConfigFile> Future<T> readConfigTo(T configFile) {
-        return this.executor.submit(() -> {
+    public synchronized <T extends ConfigFile> Optional<Future<T>> readConfigTo(T configFile) {
+        final Path path = FileConfigManager.this.getPath(configFile);
+        if (!path.toFile().exists()) {
+            return Optional.empty();
+        }
 
-            final String rawData = new String(Files.readAllBytes(FileConfigManager.this.getPath(configFile)), CHARSET);
+        return Optional.of(this.executor.submit(() -> {
+
+            final String rawData = new String(Files.readAllBytes(path), CHARSET);
             final JsonObject jsonObject = FileConfigManager.this.parser.parse(rawData).getAsJsonObject();
             configFile.read(jsonObject);
             return configFile;
-        });
+        }));
     }
 
 

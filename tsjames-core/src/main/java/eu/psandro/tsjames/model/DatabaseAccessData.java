@@ -14,4 +14,9 @@ public final class DatabaseAccessData {
 
     private final String password;
 
+
+    public boolean isFilled() {
+        return this.url != null && this.username != null && this.password != null;
+    }
+
 }
