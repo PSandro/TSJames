@@ -98,6 +98,7 @@ public final class TSJamesBot {
     }
 
     public void shutdown() {
+        this.console.printLine("bye...");
         try {
             this.databaseManager.close();
         } catch (IOException e) {

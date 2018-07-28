@@ -37,7 +37,7 @@ public class User implements Serializable {
     private String username;
 
     @JoinColumn(name = "data_id", unique = true)
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false, targetEntity = UserData.class)
     private UserData userData;
 
     protected User(@NonNull Date creation, @NonNull String username, @NonNull UserData userData) {

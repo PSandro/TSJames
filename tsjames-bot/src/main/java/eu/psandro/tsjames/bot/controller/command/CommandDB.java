@@ -9,14 +9,14 @@ import java.util.stream.Stream;
 
 public final class CommandDB extends Command {
 
-    private static final String OPTIONS = Stream.of(
+    private static final String OPTIONS = "Commands:\n " + Stream.of(
             "set <url|username|password> <value>",
             "get <url|username>",
             "status - get the status of the connection",
             "connect - (re)establish the connection",
             "buildURL <host> <port> <database>",
             "save - save the configuration to the file",
-            "load - load the configuration from the file").collect(Collectors.joining("\n"));
+            "load - load the configuration from the file").collect(Collectors.joining("\n ")) + "\n";
 
     public CommandDB(TSJamesBot jamesBot) {
         super(jamesBot);
@@ -68,7 +68,7 @@ public final class CommandDB extends Command {
 
             } else if (command.equals("status")) {
                 if (args.length != 1) return "db status";
-                return super.getJamesBot().getDatabaseManager().isOpen() ? "DB is open." : "DB is closed.";
+                return super.getJamesBot().getDatabaseManager().isOpen() ? "DB connection is up." : "DB connection is closed.";
             } else if (command.equals("connect")) {
                 if (args.length != 1) return "db connect";
                 try {

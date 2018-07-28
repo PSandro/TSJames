@@ -44,7 +44,7 @@ public final class FileConfigManager extends ConfigManager {
     public synchronized void saveConfig(ConfigFile configFile) {
         this.executor.execute(() -> {
             final Path path = FileConfigManager.this.getPath(configFile);
-            final String rawData = configFile.pack().getAsString();
+            final String rawData = configFile.pack().toString();
             try {
                 Files.write(path, rawData.getBytes(CHARSET));
             } catch (IOException e) {

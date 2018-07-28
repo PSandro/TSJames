@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Table(name = "james_user_data")
 public final class UserData implements Serializable {
 
-    protected UserData() {
+    UserData() {
     }
 
     @Id

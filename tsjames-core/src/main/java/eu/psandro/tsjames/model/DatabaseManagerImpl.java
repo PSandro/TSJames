@@ -16,6 +16,7 @@ import org.hibernate.cfg.Environment;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.logging.Level;
 
 public final class DatabaseManagerImpl implements DatabaseManager {
 
@@ -36,12 +37,14 @@ public final class DatabaseManagerImpl implements DatabaseManager {
         settings.setProperty(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
         settings.setProperty(Environment.HBM2DDL_AUTO, "update");
         settings.setProperty(Environment.SHOW_SQL, "false");
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         final SessionFactory sessionFactory = new Configuration()
                 .addProperties(settings)
                 .addAnnotatedClass(User.class)
                 .addAnnotatedClass(UserFactory.class)
                 .addAnnotatedClass(UserRank.class)
+                .addAnnotatedClass(UserData.class)
                 .addAnnotatedClass(RankData.class)
                 .buildSessionFactory();
         return this.init(sessionFactory);
