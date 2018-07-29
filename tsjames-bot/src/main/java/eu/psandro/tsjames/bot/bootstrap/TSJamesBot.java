@@ -27,7 +27,7 @@ public final class TSJamesBot {
     protected TSJamesBot(@NonNull ConfigManager configManager) throws IOException {
         this.configManager = configManager;
         this.databaseConnection = new DatabaseConnection(console, configManager);
-        this.teamSpeakConnection = new TeamSpeakConnection(console, configManager);
+        this.teamSpeakConnection = new TeamSpeakConnection(console, configManager, ((DatabaseConnection) this.databaseConnection).getDatabaseManager().getPermissionFetcher());
         this.init();
         this.postInit();
 

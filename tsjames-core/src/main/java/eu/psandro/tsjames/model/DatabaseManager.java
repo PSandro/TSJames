@@ -17,6 +17,8 @@ public interface DatabaseManager extends Closeable {
 
     void updateUsername(long userId, String username);
 
+    PermissionFetcher getPermissionFetcher();
+
     boolean isOpen();
 
 }

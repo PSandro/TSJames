@@ -1,19 +1,18 @@
 package eu.psandro.tsjames.model;
 
 import eu.psandro.tsjames.api.exception.JamesNotInitException;
+import eu.psandro.tsjames.rank.PermissionFactory;
 import eu.psandro.tsjames.rank.RankData;
+import eu.psandro.tsjames.rank.RankPermission;
 import eu.psandro.tsjames.user.*;
 import lombok.NonNull;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 
-import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -23,6 +22,8 @@ public final class DatabaseManagerImpl implements DatabaseManager {
 
     private @NonNull
     Optional<SessionFactory> sessionFactory = Optional.empty();
+
+    private PermissionFetcher permissionFetcher;
 
     public DatabaseManagerImpl() {
     }
@@ -46,12 +47,14 @@ public final class DatabaseManagerImpl implements DatabaseManager {
                 .addAnnotatedClass(UserRank.class)
                 .addAnnotatedClass(UserData.class)
                 .addAnnotatedClass(RankData.class)
+                .addAnnotatedClass(RankPermission.class)
                 .buildSessionFactory();
         return this.init(sessionFactory);
     }
 
     public DatabaseManagerImpl init(final @NonNull SessionFactory sessionFactory) {
         this.sessionFactory = Optional.of(sessionFactory);
+        this.permissionFetcher = new PermissionFetcher(this);
         return this;
     }
 
@@ -138,6 +141,12 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
+    public PermissionFetcher getPermissionFetcher() {
+        return null;
+    }
+
+
+    @Override
     public boolean isOpen() {
         return this.sessionFactory.isPresent() && this.sessionFactory.get().isOpen();
     }
@@ -145,6 +154,30 @@ public final class DatabaseManagerImpl implements DatabaseManager {
 
     private Session openSession() throws JamesNotInitException {
         return this.sessionFactory.orElseThrow(() -> new JamesNotInitException("SessionFactory")).openSession();
+    }
+
+
+    RankPermission getOrCreatePermission(String name) {
+        final Session session = this.openSession();
+        RankPermission permission = null;
+        Transaction transaction = null;
+
+        try {
+            transaction = session.beginTransaction();
+            permission = session.get(RankPermission.class, name);
+            if (permission == null) {
+                permission = PermissionFactory.createPermission(name);
+            }
+            session.saveOrUpdate(permission);
+            transaction.commit();
+
+        } catch (HibernateException e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return permission;
     }
 
 

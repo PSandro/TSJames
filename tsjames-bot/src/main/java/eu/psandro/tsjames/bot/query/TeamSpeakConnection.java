@@ -3,10 +3,15 @@ package eu.psandro.tsjames.bot.query;
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import com.github.theholywaffle.teamspeak3.TS3Config;
 import com.github.theholywaffle.teamspeak3.TS3Query;
+import com.github.theholywaffle.teamspeak3.api.event.TS3EventType;
 import eu.psandro.tsjames.bot.controller.ConsoleIO;
 import eu.psandro.tsjames.bot.io.ManagedConnection;
 import eu.psandro.tsjames.bot.model.ConfigManager;
 import eu.psandro.tsjames.bot.model.TeamSpeakConfig;
+import eu.psandro.tsjames.bot.query.command.CommandManager;
+import eu.psandro.tsjames.bot.query.command.PingCommand;
+import eu.psandro.tsjames.bot.view.Messages;
+import eu.psandro.tsjames.model.PermissionFetcher;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,14 +34,17 @@ public final class TeamSpeakConnection extends ManagedConnection {
 
     private final ConsoleIO console;
     private final ConfigManager configManager;
+    private final PermissionFetcher permissionFetcher;
 
-    private TS3Config ts3Config;
     private TS3Query ts3Query;
     private TS3Api ts3Api;
 
-    public TeamSpeakConnection(ConsoleIO consoleIO, ConfigManager configManager) {
+    private TeamSpeakActionHandler actionHandler;
+
+    public TeamSpeakConnection(ConsoleIO consoleIO, ConfigManager configManager, PermissionFetcher permissionFetcher) {
         this.console = consoleIO;
         this.configManager = configManager;
+        this.permissionFetcher = permissionFetcher;
     }
 
 
@@ -46,8 +54,8 @@ public final class TeamSpeakConnection extends ManagedConnection {
         if (tsConfig.isPresent()) {
             try {
                 this.teamSpeakConfig = tsConfig.get().get(2, TimeUnit.SECONDS);
-                this.ts3Config = new TS3Config().setHost(this.teamSpeakConfig.getHost()).setQueryPort(this.teamSpeakConfig.getPort());
-                this.ts3Query = new TS3Query(this.ts3Config);
+                final TS3Config ts3Config = new TS3Config().setHost(this.teamSpeakConfig.getHost()).setQueryPort(this.teamSpeakConfig.getPort());
+                this.ts3Query = new TS3Query(ts3Config);
                 return true;
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -64,22 +72,51 @@ public final class TeamSpeakConnection extends ManagedConnection {
 
     @Override
     public boolean establish() throws IOException {
+
+        if (this.isRunning()) {
+            this.console.printLine("Closing TeamSpeakConnection...");
+            this.close();
+        }
+
         if (this.ts3Query == null) {
             this.console.printLine("Initializing...");
             if (!this.init()) return false;
         }
-        if (this.isRunning()) {
-            this.console.printLine("TeamSpeakConnection is already up.");
-            return false;
-        }
+        this.console.printLine("Establishing TeamSpeakConnection...");
         this.ts3Query.connect();
         this.ts3Api = this.ts3Query.getApi();
         this.ts3Api.login(this.teamSpeakConfig.getUsername(), this.teamSpeakConfig.getPassword());
         this.ts3Api.selectVirtualServerById(this.teamSpeakConfig.getVServerId());
         this.ts3Api.setNickname(this.teamSpeakConfig.getNickname());
-
+        this.console.printLine("TeamSpeakConnection established! Enabling now...");
+        this.initActionHandler();
+        this.enableActionHandling();
+        this.console.printLine("TeamSpeak action handling enabled!");
+        //this.ts3Api.sendServerMessage(Messages.JAMES_WELCOME);
         return true;
     }
+
+    private void initActionHandler() {
+        if (this.ts3Api == null) return;
+        if (this.actionHandler == null) {
+            final CommandManager commandManager = new CommandManager();
+            commandManager.registerCommand(new PingCommand(this.permissionFetcher));
+            this.actionHandler = new TeamSpeakActionHandler(this.ts3Api, null, false);
+            this.ts3Api.registerAllEvents();
+            this.ts3Api.addTS3Listeners(this.actionHandler);
+        }
+    }
+
+    private void enableActionHandling() {
+        if (this.actionHandler == null) return;
+        this.actionHandler.enable();
+    }
+
+    private void disableActionHandling() {
+        if (this.actionHandler == null) return;
+        this.actionHandler.disable();
+    }
+
 
     @Override
     public boolean isRunning() {
@@ -88,7 +125,10 @@ public final class TeamSpeakConnection extends ManagedConnection {
 
     @Override
     public void close() throws IOException {
+        this.disableActionHandling();
+        this.actionHandler = null;
         if (this.ts3Api != null) {
+            //this.ts3Api.sendServerMessage(Messages.JAMES_QUIT);
             this.ts3Api.logout();
         }
         if (this.ts3Query != null) {

@@ -6,6 +6,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -29,4 +31,9 @@ public final class RankData implements Serializable {
     @Setter
     @Column(name = "teamspeak_group")
     private int teamspeakGroup;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "perm_name", nullable = false, insertable = false, updatable = false)
+    private Set<RankPermission> permissions = new HashSet<>();
+
 }
