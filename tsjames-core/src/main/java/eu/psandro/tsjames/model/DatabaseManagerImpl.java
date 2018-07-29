@@ -26,6 +26,7 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     private PermissionFetcher permissionFetcher;
 
     public DatabaseManagerImpl() {
+        this.permissionFetcher = new PermissionFetcher(this);
     }
 
     @Override
@@ -44,7 +45,6 @@ public final class DatabaseManagerImpl implements DatabaseManager {
                 .addProperties(settings)
                 .addAnnotatedClass(User.class)
                 .addAnnotatedClass(UserFactory.class)
-                .addAnnotatedClass(UserRank.class)
                 .addAnnotatedClass(UserData.class)
                 .addAnnotatedClass(RankData.class)
                 .addAnnotatedClass(RankPermission.class)
@@ -54,14 +54,18 @@ public final class DatabaseManagerImpl implements DatabaseManager {
 
     public DatabaseManagerImpl init(final @NonNull SessionFactory sessionFactory) {
         this.sessionFactory = Optional.of(sessionFactory);
-        this.permissionFetcher = new PermissionFetcher(this);
+        this.createDefaults();
         return this;
     }
 
+    private void createDefaults() {
+
+    }
+
     @Override
-    public User createUser(@NonNull String username) {
+    public User createUser(@NonNull String username, String email, String passwordHash) {
         final Session session = this.openSession();
-        final User user = UserFactory.createUser(username);
+        final User user = UserFactory.createUser(username, email, passwordHash);
         Transaction transaction = null;
 
         try {
@@ -142,7 +146,7 @@ public final class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public PermissionFetcher getPermissionFetcher() {
-        return null;
+        return this.permissionFetcher;
     }
 
 
@@ -164,7 +168,7 @@ public final class DatabaseManagerImpl implements DatabaseManager {
 
         try {
             transaction = session.beginTransaction();
-            permission = session.get(RankPermission.class, name);
+            permission = session.byNaturalId(RankPermission.class).using("name", name).load();
             if (permission == null) {
                 permission = PermissionFactory.createPermission(name);
             }

@@ -13,6 +13,7 @@ import eu.psandro.tsjames.bot.query.command.PingCommand;
 import eu.psandro.tsjames.bot.view.Messages;
 import eu.psandro.tsjames.model.PermissionFetcher;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public final class TeamSpeakConnection extends ManagedConnection {
 
     private TeamSpeakActionHandler actionHandler;
 
-    public TeamSpeakConnection(ConsoleIO consoleIO, ConfigManager configManager, PermissionFetcher permissionFetcher) {
+    public TeamSpeakConnection(@NonNull ConsoleIO consoleIO, @NonNull ConfigManager configManager, @NonNull PermissionFetcher permissionFetcher) {
         this.console = consoleIO;
         this.configManager = configManager;
         this.permissionFetcher = permissionFetcher;
@@ -101,7 +102,7 @@ public final class TeamSpeakConnection extends ManagedConnection {
         if (this.actionHandler == null) {
             final CommandManager commandManager = new CommandManager();
             commandManager.registerCommand(new PingCommand(this.permissionFetcher));
-            this.actionHandler = new TeamSpeakActionHandler(this.ts3Api, null, false);
+            this.actionHandler = new TeamSpeakActionHandler(this.ts3Api, commandManager, false);
             this.ts3Api.registerAllEvents();
             this.ts3Api.addTS3Listeners(this.actionHandler);
         }
@@ -130,9 +131,11 @@ public final class TeamSpeakConnection extends ManagedConnection {
         if (this.ts3Api != null) {
             //this.ts3Api.sendServerMessage(Messages.JAMES_QUIT);
             this.ts3Api.logout();
+            this.ts3Api = null;
         }
         if (this.ts3Query != null) {
             this.ts3Query.exit();
+            this.ts3Query = null;
         }
     }
 }

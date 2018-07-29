@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,10 +17,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserTest {
 
     private static DatabaseManager databaseManager;
+    private static RankData defaultRank = RankData.DEFAULT;
 
     @BeforeAll
     static void setUp() {
-        databaseManager = RepositoryUtil.createTestDatabaseManager(User.class, UserData.class, UserRank.class, RankData.class, RankPermission.class);
+        databaseManager = RepositoryUtil.createTestDatabaseManager(User.class, UserData.class, RankData.class, RankPermission.class);
     }
 
     @AfterAll
@@ -33,10 +35,9 @@ class UserTest {
 
         final String username = "test";
 
-        final User user = databaseManager.createUser(username);
+        final User user = databaseManager.createUser(username, UUID.randomUUID().toString(), UUID.randomUUID().toString());
 
         assertEquals(username, user.getUsername());
-        assertTrue(user.getCreation().getTime() <= System.currentTimeMillis());
 
     }
 
@@ -45,7 +46,7 @@ class UserTest {
 
         final String username = "hallo123";
 
-        final User user = databaseManager.createUser(username);
+        final User user = databaseManager.createUser(username, UUID.randomUUID().toString(), UUID.randomUUID().toString());
         final User fetchedUser = databaseManager.getUser(username);
 
         assertEquals(user, fetchedUser);
@@ -57,7 +58,7 @@ class UserTest {
 
         final String username = "test5678";
 
-        final User user = databaseManager.createUser(username);
+        final User user = databaseManager.createUser(username, UUID.randomUUID().toString(), UUID.randomUUID().toString());
         final User fetchedUser = databaseManager.getUser(user.getUserId());
 
         assertEquals(user, fetchedUser);
@@ -69,13 +70,13 @@ class UserTest {
 
         final String username = "huhu789";
 
-        final User user = databaseManager.createUser(username);
+        final User user = databaseManager.createUser(username, UUID.randomUUID().toString(), UUID.randomUUID().toString());
         databaseManager.updateUsername(user.getUserId(), "huhu89");
         final User fetchedUser = databaseManager.getUser(user.getUserId());
         assertNotEquals(user, fetchedUser);
 
         assertEquals(user.getUserId(), fetchedUser.getUserId());
-        assertEquals(user.getCreation(), fetchedUser.getCreation());
 
     }
+
 }

@@ -20,7 +20,7 @@ import lombok.Getter;
 public class TeamSpeakActionHandler extends TS3EventAdapter {
 
     private final TS3Api ts3Api;
-    private final CommandManager commandHandler;
+    private final CommandManager commandManager;
     @Getter
     private boolean enabled;
 
@@ -33,7 +33,7 @@ public class TeamSpeakActionHandler extends TS3EventAdapter {
             message[0] = message[0].replaceFirst("!", "");
             final TeamSpeakCommand command;
             try {
-                command = this.commandHandler.getCommandByLabel(message[0]);
+                command = this.commandManager.getCommandByLabel(message[0]);
 
             } catch (CommandNotRegisteredException exc) {
                 this.ts3Api.sendPrivateMessage(e.getInvokerId(), "The command was not found or is not registered!");

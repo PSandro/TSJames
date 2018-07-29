@@ -2,6 +2,7 @@ package eu.psandro.tsjames.bot.query.command;
 
 
 import eu.psandro.tsjames.bot.controller.exception.CommandNotRegisteredException;
+import lombok.NonNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +24,7 @@ public final class CommandManager {
         this.commands.remove(this.getCommandByLabel(label));
     }
 
-    public TeamSpeakCommand getCommandByLabel(String label) {
+    public TeamSpeakCommand getCommandByLabel(@NonNull String label) {
         return this.commands.stream().filter(teamSpeakCommand -> teamSpeakCommand.getLabel().equalsIgnoreCase(label))
                 .findAny()
                 .orElseThrow(() -> new CommandNotRegisteredException(label));

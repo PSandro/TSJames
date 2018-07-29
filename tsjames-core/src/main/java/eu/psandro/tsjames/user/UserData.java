@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -23,4 +24,15 @@ public final class UserData implements Serializable {
     @Setter
     @Column(name = "teamspeak_id", nullable = true, insertable = true, updatable = true)
     private String teamspeakId;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "creation", nullable = false, insertable = true)
+    @Setter(AccessLevel.PROTECTED)
+    private Date creation;
+
+    @PrePersist
+    protected void onCreate() {
+        this.creation = new Date();
+    }
+
 }

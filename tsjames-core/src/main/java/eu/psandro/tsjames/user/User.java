@@ -1,6 +1,7 @@
 package eu.psandro.tsjames.user;
 
 
+import eu.psandro.tsjames.rank.RankData;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
@@ -26,24 +27,33 @@ public class User implements Serializable {
     @Column(name = "user_id", unique = true, nullable = false, insertable = true, updatable = false)
     private long userId;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "creation", nullable = false, insertable = true)
-    @Setter(AccessLevel.PROTECTED)
-    private Date creation;
 
     @NaturalId(mutable = true)
     @Column(name = "username", nullable = false, unique = true, insertable = true)
     @Setter
     private String username;
 
+    @Column(name = "email", nullable = false, unique = true, insertable = true)
+    @Setter
+    private String email;
+
+    @Column(name = "passwd", nullable = false, unique = false, insertable = true)
+    @Setter
+    private String passwordHash;
+
     @JoinColumn(name = "data_id", unique = true)
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false, targetEntity = UserData.class)
-    private UserData userData;
+    private UserData userData = new UserData();
 
-    protected User(@NonNull Date creation, @NonNull String username, @NonNull UserData userData) {
-        this.creation = creation;
+    @JoinColumn(name = "rank_id", unique = true, insertable = false, updatable = false)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Setter
+    private RankData userRank;
+
+    protected User(@NonNull String username, @NonNull String email, @NonNull String passwordHash) {
         this.username = username;
-        this.userData = userData;
+        this.email = email;
+        this.passwordHash = passwordHash;
     }
 
 }

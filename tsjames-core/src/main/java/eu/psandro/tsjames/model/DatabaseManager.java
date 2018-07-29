@@ -1,5 +1,6 @@
 package eu.psandro.tsjames.model;
 
+import eu.psandro.tsjames.rank.RankData;
 import eu.psandro.tsjames.user.User;
 
 import java.io.Closeable;
@@ -9,7 +10,7 @@ public interface DatabaseManager extends Closeable {
 
     DatabaseManager init(DatabaseAccessData accessData);
 
-    User createUser(String username);
+    User createUser(String username, String email, String passwordHash);
 
     User getUser(String username);
 

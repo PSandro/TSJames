@@ -16,7 +16,7 @@ public final class DatabaseConfig extends ConfigFile {
     }
 
     public void setUrl(String host, int port, String database) {
-        this.url = String.format("jdbc:mysql://%s:%d/%s?autoReconnect=true", host, port, database);
+        this.url = String.format("jdbc:mysql://%s:%d/%s?autoReconnect=true&useSSL=false", host, port, database);
     }
 
     @Override
