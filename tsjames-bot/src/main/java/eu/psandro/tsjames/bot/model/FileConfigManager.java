@@ -28,7 +28,7 @@ public final class FileConfigManager extends ConfigManager {
     @Override
     public boolean createSources() {
         if (!FOLDER.exists()) {
-            this.executor.execute(() -> FOLDER.mkdir());
+            this.executor.execute(FOLDER::mkdir);
             return false;
         }
         return true;

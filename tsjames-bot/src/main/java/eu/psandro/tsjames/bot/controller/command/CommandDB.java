@@ -2,6 +2,9 @@ package eu.psandro.tsjames.bot.controller.command;
 
 import eu.psandro.tsjames.bot.bootstrap.TSJamesBot;
 import eu.psandro.tsjames.bot.controller.Command;
+import eu.psandro.tsjames.bot.model.DatabaseConfig;
+import eu.psandro.tsjames.bot.model.DatabaseConnection;
+import eu.psandro.tsjames.model.DatabaseManager;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -18,8 +21,15 @@ public final class CommandDB extends Command {
             "save - save the configuration to the file",
             "load - load the configuration from the file").collect(Collectors.joining("\n ")) + "\n";
 
+    private final DatabaseConfig databaseConfig;
+    private final DatabaseManager databaseManager;
+    private final DatabaseConnection databaseConnection;
+
     public CommandDB(TSJamesBot jamesBot) {
         super(jamesBot);
+        this.databaseConnection = (DatabaseConnection) super.getJamesBot().getDatabaseConnection();
+        this.databaseConfig = databaseConnection.getDatabaseConfig();
+        this.databaseManager = databaseConnection.getDatabaseManager();
     }
 
 
@@ -35,13 +45,13 @@ public final class CommandDB extends Command {
                 final String value = args[2];
                 switch (field) {
                     case "username":
-                        super.getJamesBot().getDatabaseConfig().setUsername(value);
+                        this.databaseConfig.setUsername(value);
                         return field + " set to " + value;
                     case "password":
-                        super.getJamesBot().getDatabaseConfig().setPassword(value);
+                        this.databaseConfig.setPassword(value);
                         return field + " set to " + value;
                     case "url":
-                        super.getJamesBot().getDatabaseConfig().setUrl(value);
+                        this.databaseConfig.setUrl(value);
                         return field + " set to " + value;
                 }
             } else if (command.equals("get")) {
@@ -49,9 +59,9 @@ public final class CommandDB extends Command {
                 final String field = args[1].toLowerCase();
                 switch (field) {
                     case "username":
-                        return "Value: " + super.getJamesBot().getDatabaseConfig().getUsername();
+                        return "Value: " + this.databaseConfig.getUsername();
                     case "url":
-                        return "Value: " + super.getJamesBot().getDatabaseConfig().getUrl();
+                        return "Value: " + this.databaseConfig.getUrl();
                 }
                 return "Field not found!";
             } else if (command.equals("buildurl")) {
@@ -63,16 +73,16 @@ public final class CommandDB extends Command {
                 } catch (NumberFormatException e) {
                     return "The <port> is not an integer!";
                 }
-                super.getJamesBot().getDatabaseConfig().setUrl(host, port, database);
+                this.databaseConfig.setUrl(host, port, database);
                 return "URL set!";
 
             } else if (command.equals("status")) {
                 if (args.length != 1) return "db status";
-                return super.getJamesBot().getDatabaseManager().isOpen() ? "DB connection is up." : "DB connection is closed.";
+                return this.databaseManager.isOpen() ? "DB connection is up." : "DB connection is closed.";
             } else if (command.equals("connect")) {
                 if (args.length != 1) return "db connect";
                 try {
-                    super.getJamesBot().establishDatabaseConnection();
+                    this.databaseConnection.establish();
                     return "db connection successfully established!";
                 } catch (IOException e) {
                     return "error while establishing db connection: " + e.getMessage();
@@ -80,11 +90,11 @@ public final class CommandDB extends Command {
 
             } else if (command.equals("save")) {
                 if (args.length != 1) return "db save";
-                super.getJamesBot().getConfigManager().saveConfig(super.getJamesBot().getDatabaseConfig());
+                super.getJamesBot().getConfigManager().saveConfig(this.databaseConfig);
                 return "DatabaseConfig saved!";
             } else if (command.equals("load")) {
                 if (args.length != 1) return "db load";
-                super.getJamesBot().getConfigManager().readConfigTo(super.getJamesBot().getDatabaseConfig());
+                super.getJamesBot().getConfigManager().readConfigTo(this.databaseConfig);
                 return "DatabaseConfig loaded!";
             }
         }

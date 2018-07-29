@@ -99,6 +99,12 @@
             <version>2.3.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.theholywaffle</groupId>
+            <artifactId>teamspeak3-api</artifactId>
+            <version>1.1.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 

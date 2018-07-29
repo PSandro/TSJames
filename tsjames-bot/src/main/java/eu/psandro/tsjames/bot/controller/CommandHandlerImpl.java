@@ -2,6 +2,7 @@ package eu.psandro.tsjames.bot.controller;
 
 import eu.psandro.tsjames.bot.bootstrap.TSJamesBot;
 import eu.psandro.tsjames.bot.controller.command.CommandDB;
+import eu.psandro.tsjames.bot.controller.command.CommandTS;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -10,13 +11,15 @@ import java.util.stream.Stream;
 public final class CommandHandlerImpl implements CommandHandler {
 
     private final TSJamesBot tsJamesBot;
-    private final Command commandDB;
+    private final Command commandDB, commandTS;
 
-    private static final String OPTIONS = "Commands:\n " + Stream.of("ping", "help", "db", "exit").collect(Collectors.joining("\n "));
+    private static final String OPTIONS = "Commands:\n " + Stream.of("ping", "help", "db", "ts", "exit").collect(Collectors.joining("\n "));
 
     public CommandHandlerImpl(TSJamesBot tsJamesBot) {
         this.tsJamesBot = tsJamesBot;
         this.commandDB = new CommandDB(tsJamesBot);
+        this.commandTS = new CommandTS(tsJamesBot);
+
     }
 
 
@@ -30,6 +33,8 @@ public final class CommandHandlerImpl implements CommandHandler {
                 return OPTIONS;
             case "db":
                 return this.commandDB.handleCommand(Arrays.copyOfRange(args, 1, args.length));
+            case "ts":
+                return this.commandTS.handleCommand(Arrays.copyOfRange(args, 1, args.length));
             case "exit":
                 this.tsJamesBot.shutdown();
                 return "bye...";

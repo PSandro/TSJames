@@ -2,23 +2,15 @@ package eu.psandro.tsjames.bot.bootstrap;
 
 import eu.psandro.tsjames.bot.controller.CommandHandlerImpl;
 import eu.psandro.tsjames.bot.controller.ConsoleIO;
+import eu.psandro.tsjames.bot.io.ManagedConnection;
 import eu.psandro.tsjames.bot.model.ConfigManager;
-import eu.psandro.tsjames.bot.model.DatabaseConfig;
+import eu.psandro.tsjames.bot.model.DatabaseConnection;
+import eu.psandro.tsjames.bot.query.TeamSpeakConnection;
 import eu.psandro.tsjames.bot.view.Messages;
-import eu.psandro.tsjames.model.DatabaseAccessData;
-import eu.psandro.tsjames.model.DatabaseManager;
-import eu.psandro.tsjames.model.DatabaseManagerImpl;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 
 public final class TSJamesBot {
@@ -29,25 +21,21 @@ public final class TSJamesBot {
     private final ConsoleIO console = new ConsoleIO(System.in, System.out);
 
     @Getter
-    private DatabaseManager databaseManager = new DatabaseManagerImpl();
-    @Getter
-    @Setter
-    private DatabaseConfig databaseConfig = new DatabaseConfig();
+    private final ManagedConnection databaseConnection, teamSpeakConnection;
 
-    protected TSJamesBot(@NonNull ConfigManager configManager) {
+
+    protected TSJamesBot(@NonNull ConfigManager configManager) throws IOException {
         this.configManager = configManager;
+        this.databaseConnection = new DatabaseConnection(console, configManager);
+        this.teamSpeakConnection = new TeamSpeakConnection(console, configManager);
         this.init();
+        this.postInit();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                databaseManager.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::prepareShutdown));
     }
 
-    private void init() {
+
+    private void init() throws IOException {
         //Console IO setup
         this.console.setCommandHandler(new CommandHandlerImpl(this));
 
@@ -59,51 +47,35 @@ public final class TSJamesBot {
                 "Config Source Found! " :
                 "Creating Config Source...");
         //Database Config read
-        final Optional<Future<DatabaseConfig>> dbConfig = this.configManager.readConfigTo(this.databaseConfig);
-        if (dbConfig.isPresent()) {
-            try {
-                this.databaseConfig = dbConfig.get().get(2, TimeUnit.SECONDS);
-                //Database establish
-                this.establishDatabaseConnection();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                this.console.printLine("Timeout while reading DatabaseConfig File");
-            } catch (IOException e) {
-                this.console.printLine("Could not establish database connection. Please check database config and retry. See \"db\".");
-            }
-
-        } else {
-            this.console.printLine("Please configure the database settings. See \"db\".");
+        if (!this.databaseConnection.init() || !this.databaseConnection.establish()) {
+            this.console.printLine("Skipping further initialisation until db connection is established.");
+            return;
         }
+        if (!this.teamSpeakConnection.init()) {
+            return;
+        }
+        this.teamSpeakConnection.establish();
 
 
+    }
+
+    private void postInit() {
         //Enable Console Input
         this.console.printSpace(1);
         this.console.start();
     }
 
-    public void establishDatabaseConnection() throws IOException {
-        if (this.databaseManager.isOpen()) {
-            this.console.printLine("Closing database connection...");
-            this.databaseManager.close();
-        }
-        this.console.printLine("Establishing database connection...");
-        final DatabaseAccessData databaseAccessData = this.databaseConfig.toDatabaseAccesData();
-        if (!databaseAccessData.isFilled()) {
-            this.console.printLine("The DatabaseAccesData is incomplete! Please fill using \"db\"");
-            throw new IOException("DatabaseAccessData is incomplete!");
-        }
-        this.databaseManager.init(databaseAccessData);
-    }
-
-    public void shutdown() {
+    public void prepareShutdown() {
         this.console.printLine("bye...");
         try {
-            this.databaseManager.close();
+            this.databaseConnection.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void shutdown() {
+        this.prepareShutdown();
         System.exit(0);
     }
 
