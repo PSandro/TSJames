@@ -11,14 +11,12 @@ import java.util.Scanner;
 
 public final class ConsoleIO extends Thread {
 
-    private final InputStream inputStream;
     private final PrintStream outputStream;
     private final Scanner scanner;
     private Optional<CommandHandler> commandHandler;
 
 
     public ConsoleIO(@NonNull InputStream inputStream, @NonNull PrintStream outputStream) {
-        this.inputStream = inputStream;
         this.outputStream = outputStream;
         this.scanner = new Scanner(inputStream);
     }

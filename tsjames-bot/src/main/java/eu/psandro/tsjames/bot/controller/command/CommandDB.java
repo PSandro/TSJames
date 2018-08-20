@@ -12,14 +12,14 @@ import java.util.stream.Stream;
 
 public final class CommandDB extends Command {
 
-    private static final String OPTIONS = "Commands:\n " + Stream.of(
+    private static final String OPTIONS = "Commands:\n " + String.join("\n ",
             "set <url|username|password> <value>",
             "get <url|username>",
             "status - get the status of the connection",
             "connect - (re)establish the connection",
             "buildURL <host> <port> <database>",
             "save - save the configuration to the file",
-            "load - load the configuration from the file").collect(Collectors.joining("\n ")) + "\n";
+            "load - load the configuration from the file") + "\n";
 
     private final DatabaseConfig databaseConfig;
     private final DatabaseManager databaseManager;

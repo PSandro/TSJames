@@ -13,7 +13,7 @@ public final class CommandHandlerImpl implements CommandHandler {
     private final TSJamesBot tsJamesBot;
     private final Command commandDB, commandTS;
 
-    private static final String OPTIONS = "Commands:\n " + Stream.of("ping", "help", "db", "ts", "exit").collect(Collectors.joining("\n "));
+    private static final String OPTIONS = "Commands:\n " + String.join("\n ", "ping", "help", "db", "ts", "exit");
 
     public CommandHandlerImpl(TSJamesBot tsJamesBot) {
         this.tsJamesBot = tsJamesBot;

@@ -6,21 +6,19 @@ import eu.psandro.tsjames.bot.model.TeamSpeakConfig;
 import eu.psandro.tsjames.bot.query.TeamSpeakConnection;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author PSandro on 29.07.18
  * @project tsjames
  */
 public final class CommandTS extends Command {
-    private static final String OPTIONS = "Commands:\n " + Stream.of(
+    private static final String OPTIONS = "Commands:\n " + String.join("\n ",
             "set <host|username|password|nickname|port|vServerId> <value>",
             "info",
             "status - get the status of the connection",
             "connect - (re)establish the connection",
             "save - save the configuration to the file",
-            "load - load the configuration from the file").collect(Collectors.joining("\n ")) + "\n";
+            "load - load the configuration from the file") + "\n";
 
     private final TeamSpeakConfig teamSpeakConfig;
     private final TeamSpeakConnection teamSpeakConnection;
