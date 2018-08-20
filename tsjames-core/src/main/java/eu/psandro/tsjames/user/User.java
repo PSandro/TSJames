@@ -8,13 +8,12 @@ import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Objects;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 @Table(name = "james_user")
-@EqualsAndHashCode
 public class User implements Serializable {
 
     User() {
@@ -41,9 +40,9 @@ public class User implements Serializable {
     @Setter
     private String passwordHash;
 
-    @JoinColumn(name = "data_id", unique = true)
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false, targetEntity = UserData.class)
-    private UserData userData = new UserData();
+    @Setter
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false, targetEntity = UserData.class, mappedBy = "user")
+    private UserData userData;
 
     @JoinColumn(name = "rank_id", unique = true, insertable = false, updatable = false)
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -56,4 +55,21 @@ public class User implements Serializable {
         this.passwordHash = passwordHash;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId == user.userId &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(passwordHash, user.passwordHash) &&
+                Objects.equals(userData.getDataId(), user.userData.getDataId()) &&
+                Objects.equals(userRank, user.userRank);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, username, email, passwordHash, userData.getDataId(), userRank);
+    }
 }

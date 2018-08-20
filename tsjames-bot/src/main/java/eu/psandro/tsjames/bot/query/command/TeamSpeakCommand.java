@@ -3,7 +3,6 @@ package eu.psandro.tsjames.bot.query.command;
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import eu.psandro.tsjames.bot.query.PermittedAction;
 import eu.psandro.tsjames.model.PermissionFetcher;
-import lombok.Getter;
 
 
 /**

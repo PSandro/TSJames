@@ -1,6 +1,5 @@
 package eu.psandro.tsjames.bot.model;
 
-import com.github.theholywaffle.teamspeak3.TS3Config;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;

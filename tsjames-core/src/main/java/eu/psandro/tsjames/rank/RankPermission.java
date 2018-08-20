@@ -1,7 +1,5 @@
 package eu.psandro.tsjames.rank;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;

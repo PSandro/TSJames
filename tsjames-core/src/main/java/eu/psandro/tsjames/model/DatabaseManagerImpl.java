@@ -15,6 +15,7 @@ import org.hibernate.cfg.Environment;
 
 import java.util.Optional;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public final class DatabaseManagerImpl implements DatabaseManager {
@@ -66,11 +67,14 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     public User createUser(@NonNull String username, String email, String passwordHash) {
         final Session session = this.openSession();
         final User user = UserFactory.createUser(username, email, passwordHash);
+        final UserData userData = UserFactory.createUserData();
         Transaction transaction = null;
 
         try {
             transaction = session.beginTransaction();
-            session.saveOrUpdate(user);
+            user.setUserData(userData);
+            userData.setUser(user);
+            session.save(user);
             transaction.commit();
 
         } catch (HibernateException e) {
@@ -103,6 +107,30 @@ public final class DatabaseManagerImpl implements DatabaseManager {
         }
         return fetchedUser;
     }
+
+    @Override
+    public User getUserByTeamSpeakUUID(UUID uuid) {
+        final Session session = this.openSession();
+        Transaction fetchTransacton = null;
+        UserData fetchedData = null;
+
+        try {
+
+            fetchTransacton = session.beginTransaction();
+            fetchedData = session.byNaturalId(UserData.class)
+                    .using("teamspeak_id", uuid.toString()).load();
+            fetchTransacton.commit();
+
+        } catch (HibernateException e) {
+            if (fetchTransacton != null) fetchTransacton.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        if (fetchedData == null) return null;
+        return fetchedData.getUser();
+    }
+
 
     @Override
     public User getUser(Long userId) {
