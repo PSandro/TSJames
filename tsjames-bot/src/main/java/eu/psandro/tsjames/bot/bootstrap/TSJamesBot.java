@@ -2,7 +2,7 @@ package eu.psandro.tsjames.bot.bootstrap;
 
 import eu.psandro.tsjames.bot.controller.CommandHandlerImpl;
 import eu.psandro.tsjames.bot.controller.ConsoleIO;
-import eu.psandro.tsjames.bot.io.ManagedConnection;
+import eu.psandro.tsjames.io.ManagedConnection;
 import eu.psandro.tsjames.bot.model.ConfigManager;
 import eu.psandro.tsjames.bot.model.DatabaseConnection;
 import eu.psandro.tsjames.bot.query.TeamSpeakConnection;
@@ -24,7 +24,7 @@ public final class TSJamesBot {
     private final ManagedConnection databaseConnection, teamSpeakConnection;
 
 
-    protected TSJamesBot(@NonNull ConfigManager configManager) throws IOException {
+    protected TSJamesBot(@NonNull ConfigManager configManager) throws IOException, InterruptedException {
         this.configManager = configManager;
         this.databaseConnection = new DatabaseConnection(console, configManager);
         this.teamSpeakConnection = new TeamSpeakConnection(console, configManager, ((DatabaseConnection) this.databaseConnection).getDatabaseManager().getPermissionFetcher());
@@ -35,7 +35,7 @@ public final class TSJamesBot {
     }
 
 
-    private void init() throws IOException {
+    private void init() throws IOException, InterruptedException {
         //Console IO setup
         this.console.setCommandHandler(new CommandHandlerImpl(this));
 

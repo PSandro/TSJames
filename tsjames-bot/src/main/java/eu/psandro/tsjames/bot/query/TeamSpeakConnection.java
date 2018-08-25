@@ -4,7 +4,7 @@ import com.github.theholywaffle.teamspeak3.TS3Api;
 import com.github.theholywaffle.teamspeak3.TS3Config;
 import com.github.theholywaffle.teamspeak3.TS3Query;
 import eu.psandro.tsjames.bot.controller.ConsoleIO;
-import eu.psandro.tsjames.bot.io.ManagedConnection;
+import eu.psandro.tsjames.io.ManagedConnection;
 import eu.psandro.tsjames.bot.model.ConfigManager;
 import eu.psandro.tsjames.bot.model.TeamSpeakConfig;
 import eu.psandro.tsjames.bot.query.command.CommandManager;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeoutException;
  * @author PSandro on 29.07.18
  * @project tsjames
  */
-public final class TeamSpeakConnection extends ManagedConnection {
+public final class TeamSpeakConnection implements ManagedConnection {
 
     @Getter
     @Setter

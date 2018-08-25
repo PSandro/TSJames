@@ -1,7 +1,7 @@
 package eu.psandro.tsjames.bot.model;
 
 import eu.psandro.tsjames.bot.controller.ConsoleIO;
-import eu.psandro.tsjames.bot.io.ManagedConnection;
+import eu.psandro.tsjames.io.ManagedConnection;
 import eu.psandro.tsjames.model.DatabaseAccessData;
 import eu.psandro.tsjames.model.DatabaseManager;
 import eu.psandro.tsjames.model.DatabaseManagerImpl;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeoutException;
  * @author PSandro on 29.07.18
  * @project tsjames
  */
-public final class DatabaseConnection extends ManagedConnection {
+public final class DatabaseConnection implements ManagedConnection {
 
     @Getter
     private DatabaseManager databaseManager = new DatabaseManagerImpl();

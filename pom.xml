@@ -10,6 +10,7 @@
     <modules>
         <module>tsjames-bot</module>
         <module>tsjames-core</module>
+        <module>tsjames-daemon</module>
     </modules>
     <packaging>pom</packaging>
 

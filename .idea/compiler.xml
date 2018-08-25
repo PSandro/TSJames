@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="tsjames-bot" />
         <module name="tsjames-core" />
+        <module name="tsjames-daemon" />
       </profile>
     </annotationProcessing>
   </component>
