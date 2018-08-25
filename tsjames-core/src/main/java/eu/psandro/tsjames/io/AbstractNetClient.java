@@ -1,5 +1,6 @@
 package eu.psandro.tsjames.io;
 
+import eu.psandro.tsjames.io.packet.NetPacket;
 import io.netty.bootstrap.Bootstrap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,9 +19,9 @@ public abstract class AbstractNetClient extends Bootstrap implements ManagedConn
     String host;
     private final int port;
 
-    public abstract void sendPacket(NetPaket... netPaket);
+    public abstract void sendPacket(NetPacket... netPacket);
 
-    public abstract void sendPacket(NetSubject recipient, NetPaket... netPaket);
+    public abstract void sendPacket(NetSubject recipient, NetPacket... netPacket);
 
 
 }

@@ -7,8 +7,6 @@ import eu.psandro.tsjames.bot.model.DatabaseConnection;
 import eu.psandro.tsjames.model.DatabaseManager;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public final class CommandDB extends Command {
 

@@ -2,6 +2,10 @@ package eu.psandro.tsjames.io;
 
 import eu.psandro.tsjames.api.exception.ConnectionNotOpenException;
 import eu.psandro.tsjames.api.exception.JamesAlreadyInitException;
+import eu.psandro.tsjames.io.handler.PacketHandler;
+import eu.psandro.tsjames.io.packet.NetPacket;
+import eu.psandro.tsjames.io.packet.NetPacketDecoder;
+import eu.psandro.tsjames.io.packet.NetPacketEncoder;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -33,13 +37,13 @@ public final class NetClientImpl extends AbstractNetClient {
     }
 
     @Override
-    public void sendPacket(NetPaket... netPaket) throws ConnectionNotOpenException {
+    public void sendPacket(NetPacket... netPacket) throws ConnectionNotOpenException {
         //TODO
     }
 
     @Override
-    public void sendPacket(NetSubject recipient, NetPaket... netPaket) throws ConnectionNotOpenException {
-        for (NetPaket paket : netPaket) {
+    public void sendPacket(NetSubject recipient, NetPacket... netPacket) throws ConnectionNotOpenException {
+        for (NetPacket paket : netPacket) {
             this.netConnection.getChannel();
         }
         //TODO
@@ -58,6 +62,10 @@ public final class NetClientImpl extends AbstractNetClient {
                     @Override
                     protected void initChannel(Channel ch) throws Exception {
                         //TODO init Channel (+maybe SSL)
+                        ch.pipeline()
+                                .addLast("encoder", new NetPacketEncoder())
+                                .addLast("decoder", new NetPacketDecoder())
+                                .addLast(new PacketHandler());
 
                     }
                 });

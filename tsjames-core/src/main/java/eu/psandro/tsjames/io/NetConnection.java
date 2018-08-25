@@ -3,7 +3,6 @@ package eu.psandro.tsjames.io;
 
 import eu.psandro.tsjames.api.exception.ConnectionNotOpenException;
 import io.netty.channel.Channel;
-import lombok.Getter;
 import lombok.NonNull;
 
 

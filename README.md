@@ -6,7 +6,7 @@ Currently the support of following servies is planned:
 * Steam Bot (bot with Steam friendships to the user)
 * ...
 
-_Master_ [![Build Status](https://travis-ci.org/PSandro/TSJames.svg?branch=master)](https://travis-ci.org/PSandro/TSJames)
+Master [![Build Status](https://travis-ci.org/PSandro/TSJames.svg?branch=master)](https://travis-ci.org/PSandro/TSJames)
 
 # Features
   footnote ¹: An user will be able to see if any of his friends are online and if so, on which services they are active. Furthermore an user will be able to interact with other registered Users over the TS James network.

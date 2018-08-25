@@ -5,8 +5,6 @@ import eu.psandro.tsjames.bot.controller.command.CommandDB;
 import eu.psandro.tsjames.bot.controller.command.CommandTS;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public final class CommandHandlerImpl implements CommandHandler {
 
