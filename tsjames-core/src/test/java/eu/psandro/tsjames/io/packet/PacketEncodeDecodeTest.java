@@ -28,10 +28,12 @@ class PacketEncodeDecodeTest {
     }
 
     @Test
-    void shouldEncodeAndDecode() {
+    void shouldEncodeAndDecodeSendMessage() {
         this.packetRegistry.registerPacket((short) 1, PacketSendMessage.class);
 
         final PacketSendMessage packet = new PacketSendMessage((short) 1);
+        packet.setMessage("Hi");
+        packet.setRecipientUserId(04646565041L);
 
         final PacketSendMessage decodedPacket = this.encodeDecode(packet);
 
@@ -39,6 +41,23 @@ class PacketEncodeDecodeTest {
         assertEquals(packet.getPacketId(), decodedPacket.getPacketId());
         assertEquals(packet.getMessage(), decodedPacket.getMessage());
         assertEquals(packet.getRecipientUserId(), decodedPacket.getRecipientUserId());
+        assertEquals(packet, decodedPacket);
+    }
+
+    @Test
+    void shouldEncodeAndDecodeShutdownm() {
+        this.packetRegistry.registerPacket((short) 1, PacketShutdown.class);
+
+        final PacketShutdown packet = new PacketShutdown((short) 1);
+        packet.setMessage("The system is going down!");
+        packet.setWhenTimeStamp(System.currentTimeMillis() + 1000L);
+
+        final PacketShutdown decodedPacket = this.encodeDecode(packet);
+
+        assertNotNull(decodedPacket);
+        assertEquals(packet.getPacketId(), decodedPacket.getPacketId());
+        assertEquals(packet.getMessage(), decodedPacket.getMessage());
+        assertEquals(packet.getWhenTimeStamp(), decodedPacket.getWhenTimeStamp());
         assertEquals(packet, decodedPacket);
     }
 

@@ -2,7 +2,8 @@ package eu.psandro.tsjames.io;
 
 import eu.psandro.tsjames.api.exception.ConnectionNotOpenException;
 import eu.psandro.tsjames.api.exception.JamesAlreadyInitException;
-import eu.psandro.tsjames.io.handler.PacketHandler;
+import eu.psandro.tsjames.io.event.NetEventManager;
+import eu.psandro.tsjames.io.handler.PacketProcessingHandler;
 import eu.psandro.tsjames.io.protocol.NetPacket;
 import eu.psandro.tsjames.io.protocol.NetPacketDecoder;
 import eu.psandro.tsjames.io.protocol.NetPacketEncoder;
@@ -32,6 +33,7 @@ public final class NetClientImpl extends AbstractNetClient {
     private final NetConnection netConnection = new NetConnection();
     @Getter
     private final PacketRegistry packetRegistry = new PacketRegistry();
+    private final NetEventManager netEventManager = new NetEventManager();
     private EventLoopGroup eventLoopGroup;
 
     public NetClientImpl(String host, int port) {
@@ -68,7 +70,7 @@ public final class NetClientImpl extends AbstractNetClient {
                         ch.pipeline()
                                 .addLast("encoder", new NetPacketEncoder())
                                 .addLast("decoder", new NetPacketDecoder(NetClientImpl.this.packetRegistry))
-                                .addLast(new PacketHandler());
+                                .addLast(new PacketProcessingHandler(NetClientImpl.this.netEventManager));
 
                     }
                 });
