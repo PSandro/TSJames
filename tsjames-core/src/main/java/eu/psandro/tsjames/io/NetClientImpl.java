@@ -3,9 +3,10 @@ package eu.psandro.tsjames.io;
 import eu.psandro.tsjames.api.exception.ConnectionNotOpenException;
 import eu.psandro.tsjames.api.exception.JamesAlreadyInitException;
 import eu.psandro.tsjames.io.handler.PacketHandler;
-import eu.psandro.tsjames.io.packet.NetPacket;
-import eu.psandro.tsjames.io.packet.NetPacketDecoder;
-import eu.psandro.tsjames.io.packet.NetPacketEncoder;
+import eu.psandro.tsjames.io.protocol.NetPacket;
+import eu.psandro.tsjames.io.protocol.NetPacketDecoder;
+import eu.psandro.tsjames.io.protocol.NetPacketEncoder;
+import eu.psandro.tsjames.io.protocol.PacketRegistry;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -16,6 +17,7 @@ import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.Getter;
 
 import java.io.IOException;
 
@@ -28,7 +30,8 @@ public final class NetClientImpl extends AbstractNetClient {
     private static final int EVENT_LOOP_GROUP_THREADS = 4;
 
     private final NetConnection netConnection = new NetConnection();
-
+    @Getter
+    private final PacketRegistry packetRegistry = new PacketRegistry();
     private EventLoopGroup eventLoopGroup;
 
     public NetClientImpl(String host, int port) {
@@ -64,7 +67,7 @@ public final class NetClientImpl extends AbstractNetClient {
                         //TODO init Channel (+maybe SSL)
                         ch.pipeline()
                                 .addLast("encoder", new NetPacketEncoder())
-                                .addLast("decoder", new NetPacketDecoder())
+                                .addLast("decoder", new NetPacketDecoder(NetClientImpl.this.packetRegistry))
                                 .addLast(new PacketHandler());
 
                     }
@@ -106,6 +109,7 @@ public final class NetClientImpl extends AbstractNetClient {
             this.eventLoopGroup.shutdownGracefully();
             this.eventLoopGroup = null;
         }
+        this.packetRegistry.clear();
     }
 
 

@@ -1,12 +1,10 @@
-package eu.psandro.tsjames.io.packet;
+package eu.psandro.tsjames.io.protocol;
 
 
 import eu.psandro.tsjames.api.exception.JamesPacketAlreadyRegistered;
 import eu.psandro.tsjames.api.exception.JamesPacketException;
 import eu.psandro.tsjames.api.exception.PacketNotFoundException;
 import io.netty.buffer.ByteBuf;
-import lombok.AccessLevel;
-import lombok.Getter;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -20,9 +18,6 @@ import java.util.stream.Stream;
  */
 public final class PacketRegistry {
 
-    @Getter(AccessLevel.PACKAGE)
-    private static final PacketRegistry instance = new PacketRegistry();
-
     private final Map<Short, Class<? extends NetPacket>> registeredPackets = new HashMap<>();
 
     public void registerPacket(final short packetId, final Class<? extends NetPacket> packetClazz) throws JamesPacketException {
@@ -33,7 +28,7 @@ public final class PacketRegistry {
             throw new JamesPacketAlreadyRegistered(packetClazz);
         }
         if (!this.hasParameterlessConstructor(packetClazz)) {
-            throw new JamesPacketException("The packet does not contain an empty, public accessible constructor!");
+            throw new JamesPacketException("The protocol does not contain an empty, public accessible constructor!");
         }
         this.registeredPackets.put(packetId, packetClazz);
 
@@ -45,7 +40,12 @@ public final class PacketRegistry {
         final Constructor constructor = clazz.getConstructor();
         final NetPacket netPacket = (NetPacket) constructor.newInstance();
         netPacket.read(data);
+        netPacket.setPacketId(packetId);
         return netPacket;
+    }
+
+    public void clear() {
+        this.registeredPackets.clear();
     }
 
 

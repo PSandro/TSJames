@@ -1,8 +1,9 @@
-package eu.psandro.tsjames.io.packet;
+package eu.psandro.tsjames.io.protocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
@@ -10,9 +11,11 @@ import java.util.List;
  * @author PSandro on 25.08.18
  * @project tsjames
  */
+
+@AllArgsConstructor
 public final class NetPacketDecoder extends ByteToMessageDecoder {
 
-    private final PacketRegistry packetRegistry = PacketRegistry.getInstance();
+    private final PacketRegistry packetRegistry;
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
