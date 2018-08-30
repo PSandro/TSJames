@@ -2,7 +2,6 @@ package eu.psandro.tsjames.bot.query.command;
 
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import eu.psandro.tsjames.bot.query.PermittedAction;
-import eu.psandro.tsjames.model.PermissionFetcher;
 
 
 /**
@@ -12,8 +11,8 @@ import eu.psandro.tsjames.model.PermissionFetcher;
 public abstract class TeamSpeakCommand extends PermittedAction {
 
 
-    protected TeamSpeakCommand(PermissionFetcher permissionFetcher) {
-        super(permissionFetcher);
+    protected TeamSpeakCommand() {
+        super();
     }
 
     public abstract String getLabel();

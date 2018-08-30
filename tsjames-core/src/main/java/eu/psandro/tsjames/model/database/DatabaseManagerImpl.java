@@ -1,9 +1,7 @@
-package eu.psandro.tsjames.model;
+package eu.psandro.tsjames.model.database;
 
 import eu.psandro.tsjames.api.exception.JamesNotInitException;
-import eu.psandro.tsjames.rank.PermissionFactory;
-import eu.psandro.tsjames.rank.RankData;
-import eu.psandro.tsjames.rank.RankPermission;
+import eu.psandro.tsjames.user.rank.RankData;
 import eu.psandro.tsjames.user.*;
 import lombok.NonNull;
 import org.hibernate.HibernateException;
@@ -24,10 +22,8 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     private @NonNull
     Optional<SessionFactory> sessionFactory = Optional.empty();
 
-    private PermissionFetcher permissionFetcher;
 
     public DatabaseManagerImpl() {
-        this.permissionFetcher = new PermissionFetcher(this);
     }
 
     @Override
@@ -48,7 +44,6 @@ public final class DatabaseManagerImpl implements DatabaseManager {
                 .addAnnotatedClass(UserFactory.class)
                 .addAnnotatedClass(UserData.class)
                 .addAnnotatedClass(RankData.class)
-                .addAnnotatedClass(RankPermission.class)
                 .buildSessionFactory();
         return this.init(sessionFactory);
     }
@@ -172,10 +167,6 @@ public final class DatabaseManagerImpl implements DatabaseManager {
         }
     }
 
-    @Override
-    public PermissionFetcher getPermissionFetcher() {
-        return this.permissionFetcher;
-    }
 
 
     @Override
@@ -186,30 +177,6 @@ public final class DatabaseManagerImpl implements DatabaseManager {
 
     private Session openSession() throws JamesNotInitException {
         return this.sessionFactory.orElseThrow(() -> new JamesNotInitException("SessionFactory")).openSession();
-    }
-
-
-    RankPermission getOrCreatePermission(String name) {
-        final Session session = this.openSession();
-        RankPermission permission = null;
-        Transaction transaction = null;
-
-        try {
-            transaction = session.beginTransaction();
-            permission = session.byNaturalId(RankPermission.class).using("name", name).load();
-            if (permission == null) {
-                permission = PermissionFactory.createPermission(name);
-            }
-            session.saveOrUpdate(permission);
-            transaction.commit();
-
-        } catch (HibernateException e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return permission;
     }
 
 

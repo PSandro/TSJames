@@ -1,7 +1,7 @@
 package eu.psandro.tsjames.bot.controller.command;
 
 import eu.psandro.tsjames.bot.bootstrap.TSJamesBot;
-import eu.psandro.tsjames.bot.controller.Command;
+import eu.psandro.tsjames.controller.console.command.Command;
 import eu.psandro.tsjames.bot.model.TeamSpeakConfig;
 import eu.psandro.tsjames.bot.query.TeamSpeakConnection;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
  * @author PSandro on 29.07.18
  * @project tsjames
  */
-public final class CommandTS extends Command {
+public final class CommandTS extends BotCommand {
     private static final String OPTIONS = "Commands:\n " + String.join("\n ",
             "set <host|username|password|nickname|port|vServerId> <value>",
             "info",
@@ -103,5 +103,10 @@ public final class CommandTS extends Command {
         }
 
         return "ts subcommand not found.";
+    }
+
+    @Override
+    public String getShortDescription() {
+        return "Configure the TeamSpeak settings.";
     }
 }

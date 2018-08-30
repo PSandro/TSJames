@@ -1,6 +1,7 @@
 package eu.psandro.tsjames.bot.model;
 
 import com.google.gson.JsonObject;
+import eu.psandro.tsjames.model.file.ConfigFile;
 import lombok.Getter;
 import lombok.Setter;
 

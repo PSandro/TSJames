@@ -1,14 +1,14 @@
 package eu.psandro.tsjames.bot.controller.command;
 
 import eu.psandro.tsjames.bot.bootstrap.TSJamesBot;
-import eu.psandro.tsjames.bot.controller.Command;
-import eu.psandro.tsjames.bot.model.DatabaseConfig;
-import eu.psandro.tsjames.bot.model.DatabaseConnection;
-import eu.psandro.tsjames.model.DatabaseManager;
+import eu.psandro.tsjames.controller.console.command.Command;
+import eu.psandro.tsjames.model.file.DatabaseConfig;
+import eu.psandro.tsjames.model.database.DatabaseConnection;
+import eu.psandro.tsjames.model.database.DatabaseManager;
 
 import java.io.IOException;
 
-public final class CommandDB extends Command {
+public final class CommandDB extends BotCommand {
 
     private static final String OPTIONS = "Commands:\n " + String.join("\n ",
             "set <url|username|password> <value>",
@@ -98,5 +98,10 @@ public final class CommandDB extends Command {
         }
 
         return "db subcommand not found.";
+    }
+
+    @Override
+    public String getShortDescription() {
+        return "Configure the database settings.";
     }
 }

@@ -1,4 +1,4 @@
-package eu.psandro.tsjames.model;
+package eu.psandro.tsjames.model.database;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

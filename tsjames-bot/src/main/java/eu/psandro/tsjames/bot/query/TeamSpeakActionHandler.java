@@ -5,7 +5,7 @@ import com.github.theholywaffle.teamspeak3.api.event.ClientJoinEvent;
 import com.github.theholywaffle.teamspeak3.api.event.ClientLeaveEvent;
 import com.github.theholywaffle.teamspeak3.api.event.TS3EventAdapter;
 import com.github.theholywaffle.teamspeak3.api.event.TextMessageEvent;
-import eu.psandro.tsjames.bot.controller.exception.CommandNotRegisteredException;
+import eu.psandro.tsjames.api.exception.CommandNotRegisteredException;
 import eu.psandro.tsjames.bot.query.command.CommandManager;
 import eu.psandro.tsjames.bot.query.command.TeamSpeakCommand;
 import lombok.AllArgsConstructor;

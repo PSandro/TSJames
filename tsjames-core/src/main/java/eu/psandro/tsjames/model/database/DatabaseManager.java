@@ -1,4 +1,4 @@
-package eu.psandro.tsjames.model;
+package eu.psandro.tsjames.model.database;
 
 import eu.psandro.tsjames.user.User;
 
@@ -20,7 +20,6 @@ public interface DatabaseManager extends Closeable {
 
     void updateUsername(long userId, String username);
 
-    PermissionFetcher getPermissionFetcher();
 
     boolean isOpen();
 

@@ -1,4 +1,4 @@
-package eu.psandro.tsjames.rank;
+package eu.psandro.tsjames.user.rank;
 
 
 import lombok.*;
@@ -39,8 +39,8 @@ public final class RankData implements Serializable {
     @Column(name = "teamspeak_group")
     private int teamspeakGroup;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "perm_id", nullable = false, insertable = false, updatable = false)
-    private Set<RankPermission> permissions = new HashSet<>();
+    @ElementCollection
+    @Column(name = "permissions")
+    private Set<String> permissions = new HashSet<>();
 
 }

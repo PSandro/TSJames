@@ -1,7 +1,7 @@
 package eu.psandro.tsjames.user;
 
 
-import eu.psandro.tsjames.rank.RankData;
+import eu.psandro.tsjames.user.rank.RankData;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;

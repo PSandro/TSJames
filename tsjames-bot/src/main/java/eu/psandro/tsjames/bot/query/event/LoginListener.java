@@ -1,9 +1,7 @@
 package eu.psandro.tsjames.bot.query.event;
 
 import com.github.theholywaffle.teamspeak3.api.event.ClientJoinEvent;
-import eu.psandro.tsjames.model.DatabaseManager;
-import eu.psandro.tsjames.model.PermissionFetcher;
-import eu.psandro.tsjames.rank.RankPermission;
+import eu.psandro.tsjames.model.database.DatabaseManager;
 import eu.psandro.tsjames.user.User;
 
 import java.util.UUID;
@@ -14,14 +12,14 @@ import java.util.UUID;
  */
 public final class LoginListener extends TeamSpeakListener<ClientJoinEvent> {
 
-    private final RankPermission[] permissions;
     private final DatabaseManager databaseManager;
+    private final String[] permissions;
 
-    protected LoginListener(PermissionFetcher permissionFetcher, DatabaseManager databaseManager) {
-        super(permissionFetcher);
+    protected LoginListener(DatabaseManager databaseManager) {
+        super();
         this.databaseManager = databaseManager;
-        this.permissions = new RankPermission[]{
-                super.getPermissionFetcher().getOrCreatePermission("human"),
+        this.permissions = new String[]{
+                "human"
         };
     }
 
@@ -38,7 +36,7 @@ public final class LoginListener extends TeamSpeakListener<ClientJoinEvent> {
     }
 
     @Override
-    public RankPermission[] getNeededPermissions() {
+    public String[] getNeededPermissions() {
         return this.permissions;
     }
 }

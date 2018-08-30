@@ -1,7 +1,7 @@
 package eu.psandro.tsjames.bot.query.command;
 
 
-import eu.psandro.tsjames.bot.controller.exception.CommandNotRegisteredException;
+import eu.psandro.tsjames.api.exception.CommandNotRegisteredException;
 import lombok.NonNull;
 
 import java.util.HashSet;

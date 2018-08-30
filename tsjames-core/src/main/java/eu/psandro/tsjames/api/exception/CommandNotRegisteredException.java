@@ -1,4 +1,4 @@
-package eu.psandro.tsjames.bot.controller.exception;
+package eu.psandro.tsjames.api.exception;
 
 import eu.psandro.tsjames.api.exception.JamesException;
 

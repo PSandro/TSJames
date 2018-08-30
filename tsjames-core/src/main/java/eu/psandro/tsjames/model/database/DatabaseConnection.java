@@ -1,10 +1,9 @@
-package eu.psandro.tsjames.bot.model;
+package eu.psandro.tsjames.model.database;
 
-import eu.psandro.tsjames.bot.controller.ConsoleIO;
+import eu.psandro.tsjames.controller.console.ConsoleIO;
 import eu.psandro.tsjames.io.ManagedConnection;
-import eu.psandro.tsjames.model.DatabaseAccessData;
-import eu.psandro.tsjames.model.DatabaseManager;
-import eu.psandro.tsjames.model.DatabaseManagerImpl;
+import eu.psandro.tsjames.model.file.ConfigManager;
+import eu.psandro.tsjames.model.file.DatabaseConfig;
 import lombok.Getter;
 import lombok.Setter;
 

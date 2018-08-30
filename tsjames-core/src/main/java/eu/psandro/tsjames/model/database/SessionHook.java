@@ -1,4 +1,4 @@
-package eu.psandro.tsjames.model;
+package eu.psandro.tsjames.model.database;
 
 import org.hibernate.Session;
 

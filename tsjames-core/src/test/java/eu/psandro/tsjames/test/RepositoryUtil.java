@@ -1,7 +1,7 @@
 package eu.psandro.tsjames.test;
 
-import eu.psandro.tsjames.model.DatabaseManager;
-import eu.psandro.tsjames.model.DatabaseManagerImpl;
+import eu.psandro.tsjames.model.database.DatabaseManager;
+import eu.psandro.tsjames.model.database.DatabaseManagerImpl;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;

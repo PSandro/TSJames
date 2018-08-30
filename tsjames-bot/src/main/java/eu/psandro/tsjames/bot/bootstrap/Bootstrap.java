@@ -1,17 +1,14 @@
 package eu.psandro.tsjames.bot.bootstrap;
 
-import eu.psandro.tsjames.bot.model.FileConfigManager;
+import eu.psandro.tsjames.model.file.FileConfigManager;
 
 import java.io.IOException;
 
 public final class Bootstrap {
 
     public static void main(String[] args) {
-        try {
-            new TSJamesBot(new FileConfigManager());
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        new TSJamesBot(new FileConfigManager())
+                .bootstrap();
     }
 
 }

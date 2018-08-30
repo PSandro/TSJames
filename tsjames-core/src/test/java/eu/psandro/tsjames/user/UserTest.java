@@ -1,8 +1,7 @@
 package eu.psandro.tsjames.user;
 
-import eu.psandro.tsjames.model.DatabaseManager;
-import eu.psandro.tsjames.rank.RankData;
-import eu.psandro.tsjames.rank.RankPermission;
+import eu.psandro.tsjames.model.database.DatabaseManager;
+import eu.psandro.tsjames.user.rank.RankData;
 import eu.psandro.tsjames.test.RepositoryUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +20,7 @@ class UserTest {
 
     @BeforeAll
     static void setUp() {
-        databaseManager = RepositoryUtil.createTestDatabaseManager(User.class, UserData.class, RankData.class, RankPermission.class);
+        databaseManager = RepositoryUtil.createTestDatabaseManager(User.class, UserData.class, RankData.class);
     }
 
     @AfterAll

@@ -1,19 +1,23 @@
-package eu.psandro.tsjames.bot.controller;
+package eu.psandro.tsjames.controller.console;
 
-import eu.psandro.tsjames.bot.controller.CommandHandler;
-import eu.psandro.tsjames.bot.view.Messages;
+import eu.psandro.tsjames.controller.console.command.CommandHandler;
+import eu.psandro.tsjames.misc.Messages;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Optional;
 import java.util.Scanner;
 
 public final class ConsoleIO extends Thread {
 
     private final PrintStream outputStream;
     private final Scanner scanner;
-    private Optional<CommandHandler> commandHandler;
+    @Getter
+    @Setter
+    private @NonNull
+    CommandHandler commandHandler;
 
 
     public ConsoleIO(@NonNull InputStream inputStream, @NonNull PrintStream outputStream) {
@@ -21,10 +25,6 @@ public final class ConsoleIO extends Thread {
         this.scanner = new Scanner(inputStream);
     }
 
-
-    public void setCommandHandler(@NonNull CommandHandler commandHandler) {
-        this.commandHandler = Optional.ofNullable(commandHandler);
-    }
 
     @Override
     public void run() {
@@ -36,8 +36,8 @@ public final class ConsoleIO extends Thread {
             if (args.length <= 0) {
                 continue;
             } else { //Non empty inputs -> CommandHandler
-                if (this.commandHandler.isPresent()) {
-                    this.outputStream.println(this.commandHandler.get().handleCommandInput(args));
+                if (this.commandHandler != null) {
+                    this.outputStream.println(this.commandHandler.handleCommandInput(args));
                 } else {
                     this.outputStream.println(Messages.CONSOLE_NO_CMDHANDLER);
                 }

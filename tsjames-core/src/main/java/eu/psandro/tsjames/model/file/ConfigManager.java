@@ -1,4 +1,4 @@
-package eu.psandro.tsjames.bot.model;
+package eu.psandro.tsjames.model.file;
 
 
 import java.util.Optional;

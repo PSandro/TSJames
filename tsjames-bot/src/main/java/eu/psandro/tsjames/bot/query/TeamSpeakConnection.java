@@ -3,13 +3,12 @@ package eu.psandro.tsjames.bot.query;
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import com.github.theholywaffle.teamspeak3.TS3Config;
 import com.github.theholywaffle.teamspeak3.TS3Query;
-import eu.psandro.tsjames.bot.controller.ConsoleIO;
+import eu.psandro.tsjames.controller.console.ConsoleIO;
 import eu.psandro.tsjames.io.ManagedConnection;
-import eu.psandro.tsjames.bot.model.ConfigManager;
+import eu.psandro.tsjames.model.file.ConfigManager;
 import eu.psandro.tsjames.bot.model.TeamSpeakConfig;
 import eu.psandro.tsjames.bot.query.command.CommandManager;
 import eu.psandro.tsjames.bot.query.command.PingCommand;
-import eu.psandro.tsjames.model.PermissionFetcher;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -33,17 +32,15 @@ public final class TeamSpeakConnection implements ManagedConnection {
 
     private final ConsoleIO console;
     private final ConfigManager configManager;
-    private final PermissionFetcher permissionFetcher;
 
     private TS3Query ts3Query;
     private TS3Api ts3Api;
 
     private TeamSpeakActionHandler actionHandler;
 
-    public TeamSpeakConnection(@NonNull ConsoleIO consoleIO, @NonNull ConfigManager configManager, @NonNull PermissionFetcher permissionFetcher) {
+    public TeamSpeakConnection(@NonNull ConsoleIO consoleIO, @NonNull ConfigManager configManager) {
         this.console = consoleIO;
         this.configManager = configManager;
-        this.permissionFetcher = permissionFetcher;
     }
 
 
@@ -99,7 +96,7 @@ public final class TeamSpeakConnection implements ManagedConnection {
         if (this.ts3Api == null) return;
         if (this.actionHandler == null) {
             final CommandManager commandManager = new CommandManager();
-            commandManager.registerCommand(new PingCommand(this.permissionFetcher));
+            commandManager.registerCommand(new PingCommand());
             this.actionHandler = new TeamSpeakActionHandler(this.ts3Api, commandManager, false);
             this.ts3Api.registerAllEvents();
             this.ts3Api.addTS3Listeners(this.actionHandler);
