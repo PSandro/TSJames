@@ -1,6 +1,7 @@
 package eu.psandro.tsjames.io.protocol;
 
 import eu.psandro.tsjames.api.exception.JamesIOReadException;
+import eu.psandro.tsjames.io.auth.NetSubject;
 import io.netty.buffer.ByteBuf;
 import lombok.*;
 
@@ -23,10 +24,22 @@ public abstract class NetPacket {
     @Setter(AccessLevel.PROTECTED)
     private short packetId;
 
+    @Setter(AccessLevel.PUBLIC)
+    @Getter(AccessLevel.PUBLIC)
+    private NetSubject sender; //sender is confirmed in encoder
+
     protected NetPacket(@NonNull Short packetId) {
         this.packetId = packetId;
     }
 
+    ByteBuf deepWrite() {
+        final ByteBuf byteBuf = this.write();
+        return byteBuf;
+    }
+
+    void deepRead(ByteBuf data) {
+        this.read(data);
+    }
 
     protected abstract ByteBuf write();
 

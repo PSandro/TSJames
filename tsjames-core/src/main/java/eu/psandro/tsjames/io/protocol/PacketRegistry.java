@@ -39,7 +39,7 @@ public final class PacketRegistry {
         final Class<? extends NetPacket> clazz = this.registeredPackets.get(packetId);
         final Constructor constructor = clazz.getConstructor();
         final NetPacket netPacket = (NetPacket) constructor.newInstance();
-        netPacket.read(data);
+        netPacket.deepRead(data);
         netPacket.setPacketId(packetId);
         return netPacket;
     }

@@ -1,5 +1,6 @@
 package eu.psandro.tsjames.io.packet;
 
+import eu.psandro.tsjames.io.auth.NetSubject;
 import eu.psandro.tsjames.io.protocol.NetPacket;
 import eu.psandro.tsjames.io.protocol.NetPacketDecoder;
 import eu.psandro.tsjames.io.protocol.NetPacketEncoder;
@@ -20,7 +21,8 @@ class PacketEncodeDecodeTest {
 
 
     private final PacketRegistry packetRegistry = new PacketRegistry();
-    private final EmbeddedChannel channel = new EmbeddedChannel(new NetPacketEncoder(), new NetPacketDecoder(packetRegistry));
+    private final NetSubject testSubject = NetSubject.byId(1);
+    private final EmbeddedChannel channel = new EmbeddedChannel(new NetPacketEncoder(testSubject), new NetPacketDecoder(packetRegistry));
 
     @BeforeEach
     void clearRegistry() {
@@ -32,6 +34,7 @@ class PacketEncodeDecodeTest {
         this.packetRegistry.registerPacket((short) 1, PacketSendMessage.class);
 
         final PacketSendMessage packet = new PacketSendMessage((short) 1);
+        packet.setSender(this.testSubject);
         packet.setMessage("Hi");
         packet.setRecipientUserId(04646565041L);
 
@@ -49,6 +52,7 @@ class PacketEncodeDecodeTest {
         this.packetRegistry.registerPacket((short) 1, PacketShutdown.class);
 
         final PacketShutdown packet = new PacketShutdown((short) 1);
+        packet.setSender(this.testSubject);
         packet.setMessage("The system is going down!");
         packet.setWhenTimeStamp(System.currentTimeMillis() + 1000L);
 

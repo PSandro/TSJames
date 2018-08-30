@@ -1,5 +1,6 @@
 package eu.psandro.tsjames.io.protocol;
 
+import eu.psandro.tsjames.io.auth.NetSubject;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -26,16 +27,18 @@ public final class NetPacketDecoder extends ByteToMessageDecoder {
         }
         byte magicNumber = in.readByte();
         if (NetPacket.MAGIC_NUMBER == magicNumber) {
-            if (in.readableBytes() < 6) {//Not enough Data for packetId and length
+            if (in.readableBytes() < 10) {//Not enough Data for packetId, subjectid and length
                 in.resetReaderIndex();
             } else {
                 short packetId = in.readShort();
+                int senderId = in.readInt();
                 int length = in.readInt();
                 if (in.readableBytes() < length) {
                     in.resetReaderIndex();
                 } else {
                     final ByteBuf data = in.readBytes(length);
                     final NetPacket netPacket = this.packetRegistry.buildPacket(packetId, data);
+                    netPacket.setSender(NetSubject.byId(senderId));
                     out.add(netPacket);
                 }
             }

@@ -2,8 +2,11 @@ package eu.psandro.tsjames.io;
 
 
 import eu.psandro.tsjames.api.exception.ConnectionNotOpenException;
+import eu.psandro.tsjames.io.auth.NetSession;
 import io.netty.channel.Channel;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 
 /**
@@ -14,6 +17,10 @@ import lombok.NonNull;
 public final class NetConnection implements AutoCloseable {
 
     private Channel channel;
+    @Getter
+    @Setter
+    private NetSession session;
+
 
     public void setChannel(@NonNull Channel channel) throws ConnectionNotOpenException {
         if (!channel.isOpen()) {
@@ -42,6 +49,7 @@ public final class NetConnection implements AutoCloseable {
         if (this.channel != null) {
             this.channel.close();
             this.channel = null;
+            this.session = null;
         }
     }
 }
