@@ -1,7 +1,5 @@
 package eu.psandro.tsjames.io.event;
 
-import eu.psandro.tsjames.io.protocol.NetPacket;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Closeable;
@@ -17,18 +15,18 @@ import java.util.*;
 public class NetEventManager implements Closeable {
     private static final NetEventHandler[] EMPTYHANDLERS = {};
 
-    private final Map<Class<? extends NetPacket>, Collection<NetEventHandler>> bindings = new HashMap<>();
+    private final Map<Class<? extends NetPacketEvent>, Collection<NetEventHandler>> bindings = new HashMap<>();
     private final Set<NetEventListener> registeredListeners = new HashSet<>();
 
 
-    public NetEventHandler[] getListenersFor(Class<? extends NetPacket> clazz) {
+    public NetEventHandler[] getListenersFor(Class<? extends NetPacketEvent> clazz) {
         final Collection<NetEventHandler> handlers = this.bindings.get(clazz);
         if (handlers == null || handlers.isEmpty())
             return EMPTYHANDLERS;
         return handlers.toArray(new NetEventHandler[handlers.size()]);
     }
 
-    public <T extends NetPacket> T executePacketEvent(T packetEvent) {
+    public <T extends NetPacketEvent> T executePacketEvent(T packetEvent) {
         final Collection<NetEventHandler> handlers = this.bindings.get(packetEvent.getClass());
         if (handlers == null) {
             System.out.println("no handlers found for packet " + packetEvent.getClass().getSimpleName());
@@ -57,8 +55,8 @@ public class NetEventManager implements Closeable {
                 continue;
             }
 
-            if (NetPacket.class.isAssignableFrom(param)) {
-                final Class<? extends NetPacket> realParam = (Class<? extends NetPacket>) param;
+            if (NetPacketEvent.class.isAssignableFrom(param)) {
+                final Class<? extends NetPacketEvent> realParam = (Class<? extends NetPacketEvent>) param;
 
                 if (!this.bindings.containsKey(realParam)) {
                     this.bindings.put(realParam, new TreeSet<>());
@@ -76,13 +74,13 @@ public class NetEventManager implements Closeable {
 
 
     public void removeListener(NetEventListener listener) {
-        for (Map.Entry<Class<? extends NetPacket>, Collection<NetEventHandler>> ee : bindings.entrySet()) {
+        for (Map.Entry<Class<? extends NetPacketEvent>, Collection<NetEventHandler>> ee : bindings.entrySet()) {
             ee.getValue().removeIf(curr -> curr.getListener() == listener);
         }
         this.registeredListeners.remove(listener);
     }
 
-    public Map<Class<? extends NetPacket>, Collection<NetEventHandler>> getBindings() {
+    public Map<Class<? extends NetPacketEvent>, Collection<NetEventHandler>> getBindings() {
         return new HashMap<>(this.bindings);
     }
 

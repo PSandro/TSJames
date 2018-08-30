@@ -21,7 +21,7 @@ public class NetEventHandler implements Comparable<NetEventHandler> {
     private final NetEvent annotation;
 
 
-    public void execute(@NonNull NetPacket packetEvent) {
+    public void execute(@NonNull NetPacketEvent packetEvent) {
         try {
             method.invoke(this.listener, packetEvent);
         } catch (IllegalAccessException | InvocationTargetException e) {

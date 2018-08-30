@@ -2,6 +2,7 @@ package eu.psandro.tsjames.io;
 
 import eu.psandro.tsjames.api.exception.ConnectionNotOpenException;
 import eu.psandro.tsjames.api.exception.JamesAlreadyInitException;
+import eu.psandro.tsjames.io.auth.NetSubject;
 import eu.psandro.tsjames.io.event.NetEventManager;
 import eu.psandro.tsjames.io.handler.PacketProcessingHandler;
 import eu.psandro.tsjames.io.protocol.NetPacket;

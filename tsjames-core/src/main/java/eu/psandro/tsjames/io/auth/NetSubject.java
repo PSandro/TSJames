@@ -1,7 +1,8 @@
-package eu.psandro.tsjames.io;
+package eu.psandro.tsjames.io.auth;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 
 /**
@@ -9,10 +10,11 @@ import lombok.NonNull;
  * @project tsjames
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public final class NetSubject {
 
     private final @NonNull
-    String id;
+    int id;
 
 
 }
