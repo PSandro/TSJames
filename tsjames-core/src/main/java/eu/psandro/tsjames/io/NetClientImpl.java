@@ -17,8 +17,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.Getter;
 import lombok.NonNull;
 
-import java.io.IOException;
-
 /**
  * @author PSandro on 25.08.18
  * @project tsjames
@@ -66,7 +64,7 @@ public final class NetClientImpl extends AbstractNetClient {
                 .remoteAddress(super.getHost(), super.getPort())
                 .handler(new ChannelInitializer<Channel>() {
                     @Override
-                    protected void initChannel(Channel ch) throws Exception {
+                    protected void initChannel(Channel ch) {
                         //TODO SSL
                         ch.pipeline().addLast("lengthBaseDecoder", new NetBaseDecoder());
                     }
@@ -77,7 +75,7 @@ public final class NetClientImpl extends AbstractNetClient {
     }
 
     @Override
-    public boolean establish() throws IOException, InterruptedException {
+    public boolean establish() throws InterruptedException {
         if (this.netConnection.isOpen()) {
             throw new JamesAlreadyInitException("The NetClient has already been established!");
         }
@@ -113,7 +111,7 @@ public final class NetClientImpl extends AbstractNetClient {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         this.cleanUp();
     }
 

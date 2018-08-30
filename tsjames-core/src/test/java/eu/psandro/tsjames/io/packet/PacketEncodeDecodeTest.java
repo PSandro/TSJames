@@ -33,7 +33,7 @@ class PacketEncodeDecodeTest {
         final PacketSendMessage packet = new PacketSendMessage((short) 1);
         packet.setSender(this.testSubject);
         packet.setMessage("Hi");
-        packet.setRecipientUserId(04646565041L);
+        packet.setRecipientUserId(4646565041L);
 
         final PacketSendMessage decodedPacket = this.encodeDecode(packet);
 

@@ -120,7 +120,7 @@ public final class TeamSpeakConnection implements ManagedConnection {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         this.disableActionHandling();
         this.actionHandler = null;
         if (this.ts3Api != null) {

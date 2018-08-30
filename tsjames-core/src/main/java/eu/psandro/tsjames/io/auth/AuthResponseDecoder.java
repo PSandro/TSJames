@@ -9,7 +9,7 @@ import java.util.List;
 
 public final class AuthResponseDecoder extends ByteToMessageDecoder {
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         in.markReaderIndex();
         byte magicNumber = in.readByte();
         int size = in.readInt();

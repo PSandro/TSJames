@@ -27,11 +27,11 @@ public final class PacketProcessingHandler extends ChannelInboundHandlerAdapter 
     NetSubject local;
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
         if (!(msg instanceof NetPacket)) return;
 

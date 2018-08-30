@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class NetBaseDecoder extends ByteToMessageDecoder {
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         in.markReaderIndex();
         if (in.readableBytes() < 5) {
             in.resetReaderIndex();

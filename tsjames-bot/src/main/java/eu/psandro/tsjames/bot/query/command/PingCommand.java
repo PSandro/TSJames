@@ -2,7 +2,6 @@ package eu.psandro.tsjames.bot.query.command;
 
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import com.github.theholywaffle.teamspeak3.api.TextMessageTargetMode;
-import lombok.NonNull;
 
 /**
  * @author PSandro on 29.07.18

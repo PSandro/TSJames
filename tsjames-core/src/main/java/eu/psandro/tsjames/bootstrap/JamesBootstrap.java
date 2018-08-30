@@ -1,7 +1,5 @@
 package eu.psandro.tsjames.bootstrap;
 
-import java.io.Closeable;
-
 /**
  * @author PSandro on 30.08.18
  * @project tsjames

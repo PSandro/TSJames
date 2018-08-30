@@ -1,6 +1,5 @@
 package eu.psandro.tsjames.io.event;
 
-import eu.psandro.tsjames.io.protocol.NetPacket;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;

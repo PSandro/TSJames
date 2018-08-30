@@ -1,7 +1,6 @@
 package eu.psandro.tsjames.bot.controller.command;
 
 import eu.psandro.tsjames.bot.bootstrap.TSJamesBot;
-import eu.psandro.tsjames.controller.console.command.Command;
 import eu.psandro.tsjames.bot.model.TeamSpeakConfig;
 import eu.psandro.tsjames.bot.query.TeamSpeakConnection;
 

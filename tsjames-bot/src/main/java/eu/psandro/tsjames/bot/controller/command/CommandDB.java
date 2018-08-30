@@ -1,7 +1,6 @@
 package eu.psandro.tsjames.bot.controller.command;
 
 import eu.psandro.tsjames.bot.bootstrap.TSJamesBot;
-import eu.psandro.tsjames.controller.console.command.Command;
 import eu.psandro.tsjames.model.file.DatabaseConfig;
 import eu.psandro.tsjames.model.database.DatabaseConnection;
 import eu.psandro.tsjames.model.database.DatabaseManager;

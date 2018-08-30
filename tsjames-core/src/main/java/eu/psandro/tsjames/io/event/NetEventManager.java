@@ -6,7 +6,6 @@ import eu.psandro.tsjames.io.protocol.NetPacket;
 import lombok.NoArgsConstructor;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -29,7 +28,7 @@ public class NetEventManager implements Closeable {
         final Collection<NetEventHandler> handlers = this.bindings.get(clazz);
         if (handlers == null || handlers.isEmpty())
             return EMPTYHANDLERS;
-        return handlers.toArray(new NetEventHandler[handlers.size()]);
+        return handlers.toArray(new NetEventHandler[0]);
     }
 
     public <T extends NetPacketEvent> T executePacketEvent(T packetEvent) {
@@ -125,7 +124,7 @@ public class NetEventManager implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         this.bindings.clear();
         this.registeredListeners.clear();
         this.packetEventBindings.clear();

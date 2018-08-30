@@ -8,7 +8,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class AuthRequestEncoder extends MessageToByteEncoder<AuthRequest> {
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, AuthRequest msg, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, AuthRequest msg, ByteBuf out) {
 
         final String user = msg.getAuthUser();
         final String key = msg.getAuthPass();

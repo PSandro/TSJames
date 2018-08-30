@@ -4,7 +4,6 @@ import eu.psandro.tsjames.api.exception.JamesAlreadyInitException;
 import eu.psandro.tsjames.io.NetConnection;
 import eu.psandro.tsjames.io.auth.AuthRequestDecoder;
 import eu.psandro.tsjames.io.auth.AuthResponseEncoder;
-import eu.psandro.tsjames.io.auth.NetSession;
 import eu.psandro.tsjames.io.auth.NetSessionFactory;
 import eu.psandro.tsjames.io.event.NetEventManager;
 import eu.psandro.tsjames.io.handler.PacketProcessingHandler;
@@ -18,8 +17,6 @@ import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.Getter;
-
-import java.io.IOException;
 
 public final class NetServerImpl extends AbstractNetServer {
 
@@ -46,7 +43,7 @@ public final class NetServerImpl extends AbstractNetServer {
         super.group(this.bossGroup, this.workerGroup)
                 .channel(this.getSocketChannelClazz())
                 .childHandler(new ChannelInitializer<SocketChannel>() {
-                    protected void initChannel(SocketChannel ch) throws Exception {
+                    protected void initChannel(SocketChannel ch) {
                         //TODO SSL
                         ch.pipeline()
                                 //Decoder
@@ -71,7 +68,7 @@ public final class NetServerImpl extends AbstractNetServer {
         return true;
     }
 
-    public boolean establish() throws IOException, InterruptedException {
+    public boolean establish() throws InterruptedException {
         if (this.netConnection.isOpen()) {
             throw new JamesAlreadyInitException("The NetServer has already been established!");
         }
@@ -102,7 +99,7 @@ public final class NetServerImpl extends AbstractNetServer {
         }
     }
 
-    public void close() throws IOException {
+    public void close() {
         this.cleanUp();
     }
 

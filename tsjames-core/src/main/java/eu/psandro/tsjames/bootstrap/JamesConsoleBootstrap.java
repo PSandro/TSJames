@@ -5,8 +5,6 @@ import eu.psandro.tsjames.controller.console.command.DefaultCommandHandler;
 import eu.psandro.tsjames.misc.Messages;
 import lombok.Getter;
 
-import java.io.IOException;
-
 /**
  * @author PSandro on 30.08.18
  * @project tsjames

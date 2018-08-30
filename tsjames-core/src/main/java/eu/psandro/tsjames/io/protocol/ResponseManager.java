@@ -60,7 +60,7 @@ public final class ResponseManager implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         this.recycledIds.clear();
         this.workerService.shutdown();
         this.bindings.invalidateAll();
