@@ -15,6 +15,7 @@ public class AuthProcessingHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("Waiting for Auth Response...");
+        super.channelActive(ctx);
     }
 
     @Override
@@ -24,6 +25,8 @@ public class AuthProcessingHandler extends ChannelInboundHandlerAdapter {
         System.out.println("Received Auth Response!");
         final AuthResponse auth = (AuthResponse) msg;
         this.authManager.setAuthResponse(auth);
+
+        super.channelRead(ctx, msg);
 
     }
 

@@ -25,13 +25,19 @@ public final class NetPacketEncoder extends MessageToByteEncoder<NetPacket> {
             throw new PacketSenderNotLocal(msg.getSender().getId(), this.local.getId());
         }
 
+
         final ByteBuf dataBuf = msg.deepWrite();
-        int length = dataBuf.readableBytes();
+        int packetDataLength = dataBuf.readableBytes();
+
+        //The total byte length of the data followed by the magic number and this number.
+        int totalLength = (Short.SIZE + Integer.SIZE + Integer.SIZE) / Byte.SIZE + packetDataLength;
 
         out.writeByte(NetPacket.MAGIC_NUMBER);
+        out.writeInt(totalLength);
+
         out.writeShort(msg.getPacketId());
         out.writeInt(msg.getSender().getId());
-        out.writeInt(length);
+        out.writeInt(packetDataLength);
         out.writeBytes(dataBuf);
 
     }

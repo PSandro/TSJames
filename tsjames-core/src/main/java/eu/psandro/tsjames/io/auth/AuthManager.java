@@ -35,7 +35,7 @@ public final class AuthManager {
     private void requestAuthSync() {
         this.channel.pipeline()
                 .addLast("authEncoder", new AuthRequestEncoder())
-                .addLast("authDecoder", new AuthResponseDecoder())
+                .addAfter("lengthBaseDecoder", "authDecoder", new AuthResponseDecoder())
                 .addLast("authHandler", new AuthProcessingHandler(this));
 
 

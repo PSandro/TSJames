@@ -68,7 +68,7 @@ public final class NetClientImpl extends AbstractNetClient {
                     @Override
                     protected void initChannel(Channel ch) throws Exception {
                         //TODO SSL
-
+                        ch.pipeline().addLast("lengthBaseDecoder", new NetBaseDecoder());
                     }
                 });
 
@@ -103,7 +103,7 @@ public final class NetClientImpl extends AbstractNetClient {
     private void registerWorkerHandlers(ChannelPipeline channelPipeline) {
         channelPipeline
                 .addLast("encoder", new NetPacketEncoder(this.netConnection.getSession().getLocalSubject()))
-                .addLast("decoder", new NetPacketDecoder(this.packetRegistry))
+                .addAfter("lengthBaseDecoder", "decoder", new NetPacketDecoder(this.packetRegistry))
                 .addLast("handler", new PacketProcessingHandler(this.netEventManager, this.responseManager, this.netConnection.getSession().getLocalSubject()));
     }
 

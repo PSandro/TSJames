@@ -1,10 +1,7 @@
 package eu.psandro.tsjames.io.packet;
 
 import eu.psandro.tsjames.io.auth.NetSubject;
-import eu.psandro.tsjames.io.protocol.NetPacket;
-import eu.psandro.tsjames.io.protocol.NetPacketDecoder;
-import eu.psandro.tsjames.io.protocol.NetPacketEncoder;
-import eu.psandro.tsjames.io.protocol.PacketRegistry;
+import eu.psandro.tsjames.io.protocol.*;
 import io.netty.channel.embedded.EmbeddedChannel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +19,7 @@ class PacketEncodeDecodeTest {
 
     private final PacketRegistry packetRegistry = new PacketRegistry();
     private final NetSubject testSubject = NetSubject.byId(1);
-    private final EmbeddedChannel channel = new EmbeddedChannel(new NetPacketEncoder(testSubject), new NetPacketDecoder(packetRegistry));
+    private final EmbeddedChannel channel = new EmbeddedChannel(new NetPacketEncoder(testSubject), new NetBaseDecoder(), new NetPacketDecoder(packetRegistry));
 
     @BeforeEach
     void clearRegistry() {

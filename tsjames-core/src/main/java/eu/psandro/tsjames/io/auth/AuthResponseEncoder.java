@@ -10,9 +10,6 @@ public final class AuthResponseEncoder extends MessageToByteEncoder<AuthResponse
     @Override
     protected void encode(ChannelHandlerContext ctx, AuthResponse msg, ByteBuf out) throws Exception {
 
-        out.writeByte(AuthResponse.MAGIC_NUMBER);
-        out.writeInt(msg.getLocal().getId());
-        out.writeInt(msg.getServer().getId());
 
         final String message = msg.getErrorMessage();
 
@@ -22,9 +19,19 @@ public final class AuthResponseEncoder extends MessageToByteEncoder<AuthResponse
             messageBytes = message.getBytes(NetPacket.CHARSET);
             messageLength = messageBytes.length;
         }
+
+        int localId = msg.getLocal() == null ? -1 : msg.getLocal().getId();
+        int serverId = msg.getServer() == null ? -1 : msg.getServer().getId();
+
+
+        out.writeByte(AuthResponse.MAGIC_NUMBER);
+        out.writeInt((Integer.SIZE + Integer.SIZE + Integer.SIZE) / Byte.SIZE + messageLength);
+        out.writeInt(localId);
+        out.writeInt(serverId);
         out.writeInt(messageLength);
         if (messageLength > 0)
             out.writeBytes(messageBytes);
+
 
     }
 }

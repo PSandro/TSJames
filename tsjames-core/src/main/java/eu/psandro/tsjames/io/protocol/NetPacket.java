@@ -33,8 +33,7 @@ public abstract class NetPacket {
     }
 
     ByteBuf deepWrite() {
-        final ByteBuf byteBuf = this.write();
-        return byteBuf;
+        return this.write();
     }
 
     void deepRead(ByteBuf data) {

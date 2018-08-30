@@ -1,14 +1,12 @@
 package eu.psandro.tsjames.io.auth;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
 @EqualsAndHashCode
+@ToString
 public final class AuthResponse {
 
     public static final byte MAGIC_NUMBER = 'B';

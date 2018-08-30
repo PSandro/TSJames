@@ -4,7 +4,7 @@ package eu.psandro.tsjames.io.auth;
 import lombok.*;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter(AccessLevel.PROTECTED)
+@Getter(AccessLevel.PUBLIC)
 @EqualsAndHashCode
 public final class AuthRequest {
 

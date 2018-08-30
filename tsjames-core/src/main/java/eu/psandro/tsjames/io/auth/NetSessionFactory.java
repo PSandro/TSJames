@@ -11,4 +11,9 @@ public final class NetSessionFactory {
     public static AuthRequest createAuthRequest(final AuthCredentials authCredentials) {
         return new AuthRequest(authCredentials.getUser(), authCredentials.getPass());
     }
+
+    public static NetSession createServerSession(int id) {
+        final NetSubject subject = NetSubject.byId(id);
+        return new NetSession(subject, subject, new Date());
+    }
 }

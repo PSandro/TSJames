@@ -31,6 +31,7 @@ public class AuthRequestEncoder extends MessageToByteEncoder<AuthRequest> {
 
 
         out.writeByte(AuthRequest.MAGIC_NUMBER);
+        out.writeInt(userLength + keyLength + 8);
         out.writeInt(userLength);
         out.writeInt(keyLength);
 

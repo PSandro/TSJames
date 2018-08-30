@@ -11,30 +11,25 @@ public final class AuthResponseDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         in.markReaderIndex();
-        if (in.readableBytes() < 1) {
-            in.resetReaderIndex();
-            return;
-        }
         byte magicNumber = in.readByte();
+        int size = in.readInt();
         if (AuthResponse.MAGIC_NUMBER == magicNumber) {
-            if (in.readableBytes() < 12) {
-                in.resetReaderIndex();
-            } else {
-                int localId = in.readInt();
-                int serverId = in.readInt();
-                int length = in.readInt();
-                String errorMessage = null;
+            int localId = in.readInt();
+            int serverId = in.readInt();
+            int length = in.readInt();
+            String errorMessage = null;
 
-                if (length > 0) {
-                    if (in.readableBytes() < length) {
-                        in.resetReaderIndex();
-                    } else {
-                        errorMessage = in.readBytes(length).toString(NetPacket.CHARSET);
-                    }
-                }
-
-                out.add(new AuthResponse(errorMessage, new NetSubject(localId), new NetSubject(serverId)));
+            if (length > 0) {
+                errorMessage = in.readBytes(length).toString(NetPacket.CHARSET);
             }
+
+            final NetSubject localSubject = localId == -1 ? null : new NetSubject(localId);
+            final NetSubject serverSubject = serverId == -1 ? null : new NetSubject(serverId);
+
+            out.add(new AuthResponse(errorMessage, localSubject, serverSubject));
+        } else {
+            in.resetReaderIndex();
+            out.add(in.readBytes(size + 5));
         }
     }
 }

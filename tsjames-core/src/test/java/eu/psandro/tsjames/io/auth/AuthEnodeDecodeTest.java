@@ -1,5 +1,6 @@
 package eu.psandro.tsjames.io.auth;
 
+import eu.psandro.tsjames.io.protocol.NetBaseDecoder;
 import io.netty.channel.embedded.EmbeddedChannel;
 import org.junit.jupiter.api.Test;
 
@@ -9,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class AuthEnodeDecodeTest {
 
-    private final EmbeddedChannel responseChannel = new EmbeddedChannel(new AuthResponseDecoder(), new AuthResponseEncoder());
-    private final EmbeddedChannel requestChannel = new EmbeddedChannel(new AuthRequestEncoder(), new AuthRequestDecoder());
+    private final EmbeddedChannel responseChannel = new EmbeddedChannel(new NetBaseDecoder(), new AuthResponseDecoder(), new AuthResponseEncoder());
+    private final EmbeddedChannel requestChannel = new EmbeddedChannel(new AuthRequestEncoder(), new NetBaseDecoder(), new AuthRequestDecoder());
 
 
     @Test
