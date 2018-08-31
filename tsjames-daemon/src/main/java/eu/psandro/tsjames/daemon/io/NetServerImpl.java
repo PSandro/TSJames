@@ -73,7 +73,6 @@ public final class NetServerImpl extends AbstractNetServer {
 
                         if (finalSslContext != null) {
                             ch.pipeline().addLast(finalSslContext.newHandler(ch.alloc()));
-                            System.out.println("SSL Secured NetPacket connection");
                         }
 
                         final NetSubject localSubject = NetServerImpl.this.netConnection.getSession().getLocalSubject();
