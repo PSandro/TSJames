@@ -4,7 +4,7 @@ import eu.psandro.tsjames.model.file.FileConfigManager;
 
 public final class Bootstrap {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         new TSJamesBot(new FileConfigManager())
                 .bootstrap();
     }

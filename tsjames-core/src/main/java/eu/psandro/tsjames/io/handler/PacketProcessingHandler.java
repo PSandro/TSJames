@@ -7,6 +7,7 @@ import eu.psandro.tsjames.io.protocol.RespondableNetPacket;
 import eu.psandro.tsjames.io.protocol.ResponseManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -15,7 +16,7 @@ import lombok.NonNull;
  * @project tsjames
  */
 @AllArgsConstructor
-public final class PacketProcessingHandler extends ChannelInboundHandlerAdapter {
+public final class PacketProcessingHandler extends SimpleChannelInboundHandler<NetPacket> {
 
     private final @NonNull
     NetEventManager netEventManager;
@@ -27,23 +28,23 @@ public final class PacketProcessingHandler extends ChannelInboundHandlerAdapter 
     NetSubject local;
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
     }
 
+
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-
-        if (!(msg instanceof NetPacket)) return;
-
-        final NetPacket packet = (NetPacket) msg;
+    protected void channelRead0(ChannelHandlerContext ctx, NetPacket packet) throws Exception {
 
         if (packet instanceof RespondableNetPacket) {
             final RespondableNetPacket respondablePacket = (RespondableNetPacket) packet;
-            respondablePacket.getRespondId();
+            if (respondablePacket.getResponseTarget().equals(this.local)) {
+                this.responseManager.call(respondablePacket.getRespondId(), respondablePacket);
+                return;
+            }
         }
 
         //Calls all registered Event Listener for this packet type
         this.netEventManager.executePacketToEvent(packet);
-
     }
 }

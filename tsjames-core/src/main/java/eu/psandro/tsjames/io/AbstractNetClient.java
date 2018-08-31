@@ -12,13 +12,12 @@ import lombok.NonNull;
  * @project tsjames
  */
 
-@AllArgsConstructor
 @Getter
 public abstract class AbstractNetClient extends Bootstrap implements ManagedConnection {
 
-    private final @NonNull
+    protected
     String host;
-    private final int port;
+    protected int port;
 
     public abstract void sendPacket(NetPacket... netPacket);
 

@@ -1,6 +1,7 @@
 package eu.psandro.tsjames.daemon.io;
 
 import eu.psandro.tsjames.api.exception.JamesAlreadyInitException;
+import eu.psandro.tsjames.daemon.io.auth.AuthHandler;
 import eu.psandro.tsjames.io.NetConnection;
 import eu.psandro.tsjames.io.auth.AuthRequestDecoder;
 import eu.psandro.tsjames.io.auth.AuthResponseEncoder;
@@ -29,6 +30,7 @@ public final class NetServerImpl extends AbstractNetServer {
     private final PacketRegistry packetRegistry = new PacketRegistry();
     private final NetEventManager netEventManager = new NetEventManager();
     private final ResponseManager responseManager = new ResponseManager();
+    private final SessionManager sessionManager = new SessionManager();
 
     public NetServerImpl(int port) {
         super(port);
@@ -55,7 +57,7 @@ public final class NetServerImpl extends AbstractNetServer {
                                 .addLast("packetEncoder", new NetPacketEncoder(NetServerImpl.this.netConnection.getSession().getLocalSubject()))
 
                                 //Handler
-                                //TODO .addLast("authHandler", )
+                                .addLast("authHandler", new AuthHandler(NetServerImpl.this.sessionManager, NetServerImpl.this.netConnection.getSession().getLocalSubject()))
                                 .addLast("packetHandler", new PacketProcessingHandler(NetServerImpl.this.netEventManager, NetServerImpl.this.responseManager, NetServerImpl.this.netConnection.getSession().getLocalSubject()));
 
 
@@ -76,7 +78,7 @@ public final class NetServerImpl extends AbstractNetServer {
         if (channel == null || !channel.isOpen()) return false;
         this.netConnection.setChannel(channel);
 
-        return false;
+        return true;
     }
 
     public boolean isRunning() {

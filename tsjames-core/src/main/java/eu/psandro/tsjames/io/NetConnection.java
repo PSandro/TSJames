@@ -41,7 +41,7 @@ public final class NetConnection implements AutoCloseable {
 
     public boolean isOpen() {
 
-        return this.channel != null && this.channel.isOpen();
+        return this.channel != null && this.channel.isOpen() && this.channel.isActive();
     }
 
     @Override

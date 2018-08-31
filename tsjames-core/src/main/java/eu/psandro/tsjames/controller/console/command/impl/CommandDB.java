@@ -1,13 +1,14 @@
-package eu.psandro.tsjames.bot.controller.command;
+package eu.psandro.tsjames.controller.console.command.impl;
 
-import eu.psandro.tsjames.bot.bootstrap.TSJamesBot;
+import eu.psandro.tsjames.controller.console.command.Command;
+import eu.psandro.tsjames.model.file.ConfigManager;
 import eu.psandro.tsjames.model.file.DatabaseConfig;
 import eu.psandro.tsjames.model.database.DatabaseConnection;
 import eu.psandro.tsjames.model.database.DatabaseManager;
 
 import java.io.IOException;
 
-public final class CommandDB extends BotCommand {
+public final class CommandDB extends Command {
 
     private static final String OPTIONS = "Commands:\n " + String.join("\n ",
             "set <url|username|password> <value>",
@@ -21,12 +22,13 @@ public final class CommandDB extends BotCommand {
     private final DatabaseConfig databaseConfig;
     private final DatabaseManager databaseManager;
     private final DatabaseConnection databaseConnection;
+    private final ConfigManager configManager;
 
-    public CommandDB(TSJamesBot jamesBot) {
-        super(jamesBot);
-        this.databaseConnection = (DatabaseConnection) super.getJamesBot().getDatabaseConnection();
+    public CommandDB(final DatabaseConnection databaseConnection, final ConfigManager configManager) {
+        this.databaseConnection = databaseConnection;
         this.databaseConfig = databaseConnection.getDatabaseConfig();
         this.databaseManager = databaseConnection.getDatabaseManager();
+        this.configManager = configManager;
     }
 
 
@@ -87,11 +89,11 @@ public final class CommandDB extends BotCommand {
 
             } else if (command.equals("save")) {
                 if (args.length != 1) return "db save";
-                super.getJamesBot().getConfigManager().saveConfig(this.databaseConfig);
+                this.configManager.saveConfig(this.databaseConfig);
                 return "DatabaseConfig saved!";
             } else if (command.equals("load")) {
                 if (args.length != 1) return "db load";
-                super.getJamesBot().getConfigManager().readConfigTo(this.databaseConfig);
+                this.configManager.readConfigTo(this.databaseConfig);
                 return "DatabaseConfig loaded!";
             }
         }

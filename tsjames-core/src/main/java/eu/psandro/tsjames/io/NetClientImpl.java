@@ -7,6 +7,7 @@ import eu.psandro.tsjames.io.auth.*;
 import eu.psandro.tsjames.io.event.NetEventManager;
 import eu.psandro.tsjames.io.handler.PacketProcessingHandler;
 import eu.psandro.tsjames.io.protocol.*;
+import eu.psandro.tsjames.model.file.NetClientConfig;
 import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
@@ -31,14 +32,32 @@ public final class NetClientImpl extends AbstractNetClient {
     private final NetEventManager netEventManager = new NetEventManager();
     private final ResponseManager responseManager = new ResponseManager();
     @NonNull
-    private final AuthCredentials authCredentials;
+    private AuthCredentials authCredentials;
     private EventLoopGroup eventLoopGroup;
 
     public NetClientImpl(String host, int port, @NonNull AuthCredentials authCredentials) {
-        super(host, port);
+        super.host = host;
+        super.port = port;
         this.authCredentials = authCredentials;
 
     }
+
+
+    public NetClientImpl() {
+    }
+
+    public void fillConnectionData(String host, int port, AuthCredentials authCredentials) {
+        this.host = host;
+        this.port = port;
+        this.authCredentials = authCredentials;
+    }
+
+    public void fillConnectionData(NetClientConfig config) {
+        this.host = config.getHost();
+        this.port = config.getPort();
+        this.authCredentials = new AuthCredentials(config.getUser(), config.getKey());
+    }
+
 
     @Override
     public void sendPacket(NetPacket... netPacket) throws ConnectionNotOpenException {
@@ -61,7 +80,6 @@ public final class NetClientImpl extends AbstractNetClient {
                 .option(ChannelOption.AUTO_READ, true)
                 .channel(this.getSocketChannelClazz())
                 .group(this.eventLoopGroup)
-                .remoteAddress(super.getHost(), super.getPort())
                 .handler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel ch) {
@@ -76,10 +94,10 @@ public final class NetClientImpl extends AbstractNetClient {
 
     @Override
     public boolean establish() throws InterruptedException {
-        if (this.netConnection.isOpen()) {
-            throw new JamesAlreadyInitException("The NetClient has already been established!");
-        }
-        final Channel channel = super.connect().sync().channel();
+        this.prepareRestart();
+        final Channel channel = super
+                .remoteAddress(super.getHost(), super.getPort())
+                .connect().sync().channel();
         if (channel == null || !channel.isOpen()) return false;
         this.netConnection.setChannel(channel);
 
@@ -113,6 +131,15 @@ public final class NetClientImpl extends AbstractNetClient {
     @Override
     public void close() {
         this.cleanUp();
+    }
+
+    private void prepareRestart() {
+        try {
+            this.netConnection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.packetRegistry.clear();
     }
 
     private void cleanUp() {

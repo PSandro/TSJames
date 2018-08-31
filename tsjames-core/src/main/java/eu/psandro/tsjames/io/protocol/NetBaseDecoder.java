@@ -11,6 +11,7 @@ import java.util.List;
  * @project tsjames
  */
 
+//TODO replace with LengthFieldBaseFrameDecoder
 public final class NetBaseDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
