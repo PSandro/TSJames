@@ -26,7 +26,6 @@ public class DefaultCommandHandler implements CommandHandler {
     }
 
     private void registerDefaultCommands() {
-        this.registerCommand("ping", new PingCommand());
         this.registerCommand("exit", new ExitCommand(this.jamesBootstrap));
         this.registerCommand("help", new HelpCommand(this.commandBindings));
     }

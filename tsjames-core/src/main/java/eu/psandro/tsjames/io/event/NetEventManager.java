@@ -3,25 +3,33 @@ package eu.psandro.tsjames.io.event;
 import eu.psandro.tsjames.api.exception.JamesException;
 import eu.psandro.tsjames.api.exception.JamesPacketAlreadyRegistered;
 import eu.psandro.tsjames.io.protocol.NetPacket;
+import eu.psandro.tsjames.io.protocol.RespondableNetPacket;
+import eu.psandro.tsjames.io.protocol.ResponseSenderHook;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.io.Closeable;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * @author PSandro on 26.08.18
  * @project tsjames
  */
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class NetEventManager implements Closeable {
     private static final NetEventHandler[] EMPTYHANDLERS = {};
 
     private final Map<Class<? extends NetPacketEvent>, Collection<NetEventHandler>> bindings = new HashMap<>();
     private final Set<NetEventListener> registeredListeners = new HashSet<>();
     private final Map<Class<? extends NetPacket>, Class<? extends NetPacketEvent>> packetEventBindings = new HashMap<>();
+
+    @NonNull
+    private final ResponseSenderHook hook;
 
 
     public NetEventHandler[] getListenersFor(Class<? extends NetPacketEvent> clazz) {
@@ -31,7 +39,7 @@ public class NetEventManager implements Closeable {
         return handlers.toArray(new NetEventHandler[0]);
     }
 
-    public <T extends NetPacketEvent> T executePacketEvent(T packetEvent) {
+    private <T extends NetPacketEvent> T executePacketEvent(T packetEvent) {
         final Collection<NetEventHandler> handlers = this.bindings.get(packetEvent.getClass());
         if (handlers == null) {
             System.out.println("no handlers found for packet " + packetEvent.getClass().getSimpleName());
@@ -41,8 +49,23 @@ public class NetEventManager implements Closeable {
         return packetEvent;
     }
 
-    public void executePacketToEvent(NetPacket netPacket) {
-
+    public void executePacketToEvent(NetPacket netPacket) throws IllegalAccessException, InstantiationException {
+        final Class<? extends NetPacketEvent> eventClass = this.packetEventBindings.get(netPacket.getClass());
+        if (eventClass == null) {
+            System.out.println("No event found for packet " + netPacket.getClass().getSimpleName());
+            return;
+        }
+        System.out.println("Executing packetToEvent: " + netPacket.getClass().getSimpleName());
+        NetPacketEvent event = eventClass.newInstance();
+        event.read(netPacket);
+        this.executePacketEvent(event);
+        if (event instanceof RespondableNetPacketEvent) {
+            RespondableNetPacketEvent rEvent = (RespondableNetPacketEvent) event;
+            if (rEvent.getResponse() != null) {
+                this.hook.sendResponse(rEvent.getResponse(), rEvent.getRespondTarget());
+            }
+        }
+        event = null; //Ready for garbage collector
     }
 
     public void registerListener(final NetEventListener listener) throws JamesException {
@@ -70,6 +93,10 @@ public class NetEventManager implements Closeable {
             if (NetPacketEvent.class.isAssignableFrom(param)) {
                 final Class<? extends NetPacketEvent> eventClazz = (Class<? extends NetPacketEvent>) param;
 
+                if (!this.hasParameterlessConstructor(eventClazz)) {
+                    continue;
+                }
+
 
                 final Type genericSuperclass = eventClazz.getGenericSuperclass();
 
@@ -80,7 +107,8 @@ public class NetEventManager implements Closeable {
 
                 if (parameterizedType.getActualTypeArguments().length < 1) continue;
 
-                final Class<? extends NetPacket> packetClazz = (Class<? extends NetPacket>) parameterizedType.getActualTypeArguments()[0].getClass();
+                final Class<? extends NetPacket> packetClazz = (Class<? extends NetPacket>) parameterizedType.getActualTypeArguments()[0];
+
 
                 if (this.packetEventBindings.containsKey(packetClazz)) {
                     exceptions.add(new JamesPacketAlreadyRegistered(packetClazz));
@@ -104,6 +132,7 @@ public class NetEventManager implements Closeable {
     }
 
     private NetEventHandler createEventHandler(final NetEventListener listener, final Method method, final NetEvent annotation) {
+        System.out.println("EventHandler created!");
         return new NetEventHandler(listener, method, annotation);
     }
 
@@ -117,6 +146,11 @@ public class NetEventManager implements Closeable {
 
     public Map<Class<? extends NetPacketEvent>, Collection<NetEventHandler>> getBindings() {
         return new HashMap<>(this.bindings);
+    }
+
+    private boolean hasParameterlessConstructor(Class<?> clazz) {
+        return Stream.of(clazz.getConstructors())
+                .anyMatch((c) -> c.getParameterCount() == 0);
     }
 
     public Set<NetEventListener> getRegisteredListeners() {

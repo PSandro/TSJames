@@ -35,7 +35,6 @@ public final class PacketProcessingHandler extends SimpleChannelInboundHandler<N
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, NetPacket packet) throws Exception {
-
         if (packet instanceof RespondableNetPacket) {
             final RespondableNetPacket respondablePacket = (RespondableNetPacket) packet;
             if (respondablePacket.getResponseTarget().equals(this.local)) {

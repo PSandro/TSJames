@@ -52,11 +52,13 @@ public final class TSJamesBot extends JamesConsoleBootstrap {
                     "Config Source Found! " :
                     "Creating Config Source...");
             //Database Config read
+            /**
             if (this.databaseConnection.init()) {
                 this.databaseConnection.establish();
             } else {
                 super.getConsole().printLine("Please configure Database -> see \"db\"");
             }
+             **/
             //NetClient
             if (this.netClient.init()) {
                 if (!clientConfig.load()) {

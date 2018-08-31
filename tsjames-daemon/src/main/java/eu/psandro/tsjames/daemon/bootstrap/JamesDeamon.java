@@ -1,6 +1,7 @@
 package eu.psandro.tsjames.daemon.bootstrap;
 
 import eu.psandro.tsjames.bootstrap.JamesConsoleBootstrap;
+import eu.psandro.tsjames.daemon.controller.command.ServerPingCommand;
 import eu.psandro.tsjames.daemon.io.AbstractNetServer;
 import eu.psandro.tsjames.daemon.io.NetServerImpl;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
  */
 public final class JamesDeamon extends JamesConsoleBootstrap {
 
-    private AbstractNetServer netServer;
+    private NetServerImpl netServer;
 
 
     @Override
@@ -28,9 +29,12 @@ public final class JamesDeamon extends JamesConsoleBootstrap {
             super.getConsole().printLine("Booting NetServer...");
             boolean success = this.netServer.establish();
             super.getConsole().printLine("NetServer: " + (success ? "Success!" : "Failed!"));
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        super.getConsole().getCommandHandler()
+                .registerCommand("ping", new ServerPingCommand(this.netServer));
 
 
         return true;
@@ -44,11 +48,7 @@ public final class JamesDeamon extends JamesConsoleBootstrap {
     @Override
     public void prepareShutdown() {
         super.prepareShutdown();
-        try {
-            this.netServer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.netServer.close();
         this.netServer = null;
     }
 }

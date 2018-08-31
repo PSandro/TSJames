@@ -27,7 +27,7 @@ public final class ResponseManager implements AutoCloseable {
             .build();
 
 
-    private int register(@NonNull ResponseCall responseCall) {
+    public int register(@NonNull ResponseCall responseCall) {
         final int id = this.nexId();
         this.bindings.put(id, responseCall);
         return id;

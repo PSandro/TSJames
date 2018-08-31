@@ -28,6 +28,8 @@ public final class AuthHandler extends SimpleChannelInboundHandler<AuthRequest> 
         super.channelRegistered(ctx);
     }
 
+
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("Channel active: " + ctx.channel().remoteAddress().toString());
@@ -48,7 +50,7 @@ public final class AuthHandler extends SimpleChannelInboundHandler<AuthRequest> 
             authResponse = new AuthResponse("Wrong credentials", null, null);
         }
         ctx.writeAndFlush(authResponse);
-        System.out.println("Sent auth response: " + authResponse.toString());
+        System.out.println("Auth: " + (authResponse.isSuccess() ? "success" : "failed" + " for " + ctx.channel().remoteAddress().toString()));
     }
 
 }

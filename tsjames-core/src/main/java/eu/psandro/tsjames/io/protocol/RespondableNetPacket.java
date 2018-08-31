@@ -18,6 +18,11 @@ public abstract class RespondableNetPacket extends NetPacket {
     @Getter
     private NetSubject responseTarget;
 
+    @Setter
+    @Getter
+    private @NonNull
+    ResponseCall responseCall;
+
     @Override
     ByteBuf deepWrite() {
         return super.deepWrite()
@@ -32,4 +37,5 @@ public abstract class RespondableNetPacket extends NetPacket {
         this.respondId = data.readInt();
         this.responseTarget = NetSubject.byId(data.readInt());
     }
+
 }

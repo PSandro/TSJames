@@ -19,26 +19,30 @@ public final class NetPacketEncoder extends MessageToByteEncoder<NetPacket> {
     NetSubject local;
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, NetPacket msg, ByteBuf out) {
-
+    protected void encode(ChannelHandlerContext ctx, NetPacket msg, ByteBuf out) throws Exception {
+        if (msg == null) return;
+        assert this.local != null;
         if (!(this.local.equals(msg.getSender()))) {
             throw new PacketSenderNotLocal(msg.getSender().getId(), this.local.getId());
         }
-
 
         final ByteBuf dataBuf = msg.deepWrite();
         int packetDataLength = dataBuf.readableBytes();
 
         //The total byte length of the data followed by the magic number and this number.
-        int totalLength = (Short.SIZE + Integer.SIZE + Integer.SIZE) / Byte.SIZE + packetDataLength;
+        int totalLength = ((Short.SIZE + Integer.SIZE + Integer.SIZE) / Byte.SIZE) + packetDataLength;
 
         out.writeByte(NetPacket.MAGIC_NUMBER);
         out.writeInt(totalLength);
 
         out.writeShort(msg.getPacketId());
+
         out.writeInt(msg.getSender().getId());
         out.writeInt(packetDataLength);
         out.writeBytes(dataBuf);
+
+        assert out.readableBytes() == (totalLength + 5);
+
 
     }
 }

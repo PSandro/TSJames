@@ -4,6 +4,7 @@ package eu.psandro.tsjames.io.protocol;
 import eu.psandro.tsjames.api.exception.JamesPacketAlreadyRegistered;
 import eu.psandro.tsjames.api.exception.JamesPacketException;
 import eu.psandro.tsjames.api.exception.PacketNotFoundException;
+import eu.psandro.tsjames.io.packet.PacketPing;
 import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Constructor;
@@ -19,6 +20,15 @@ import java.util.stream.Stream;
 public final class PacketRegistry {
 
     private final Map<Short, Class<? extends NetPacket>> registeredPackets = new HashMap<>();
+
+
+    public PacketRegistry() {
+        this.registerDefaults();
+    }
+
+    private void registerDefaults() {
+        this.registerPacket((short) 0, PacketPing.class);
+    }
 
     public void registerPacket(final short packetId, final Class<? extends NetPacket> packetClazz) throws JamesPacketException {
         if (this.registeredPackets.containsKey(packetId)) {
@@ -46,6 +56,7 @@ public final class PacketRegistry {
 
     public void clear() {
         this.registeredPackets.clear();
+        this.registerDefaults();
     }
 
 
