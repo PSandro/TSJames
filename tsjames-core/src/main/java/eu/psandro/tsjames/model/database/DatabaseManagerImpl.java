@@ -55,7 +55,30 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     }
 
     private void createDefaults() {
+        if (this.isTableEmpty("RankData")) {
+            final RankData defaultRank = RankData.DEFAULT;
+            final Session session = this.openSession();
+            Transaction transaction = null;
 
+            try {
+                transaction = session.beginTransaction();
+                session.save(defaultRank);
+                transaction.commit();
+
+            } catch (HibernateException e) {
+                if (transaction != null) transaction.rollback();
+                e.printStackTrace();
+            } finally {
+                session.close();
+            }
+        }
+    }
+
+    private boolean isTableEmpty(String table) {
+        final Session session = this.openSession();
+        boolean result = session.createQuery("SELECT 1 from " + table).setMaxResults(1).list().isEmpty();
+        session.close();
+        return result;
     }
 
     @Override
@@ -166,7 +189,6 @@ public final class DatabaseManagerImpl implements DatabaseManager {
             session.close();
         }
     }
-
 
 
     @Override

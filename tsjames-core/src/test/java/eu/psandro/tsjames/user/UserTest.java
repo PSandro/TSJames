@@ -36,6 +36,8 @@ class UserTest {
 
         final User user = databaseManager.createUser(username, UUID.randomUUID().toString(), UUID.randomUUID().toString());
 
+
+
         assertEquals(username, user.getUsername());
 
     }

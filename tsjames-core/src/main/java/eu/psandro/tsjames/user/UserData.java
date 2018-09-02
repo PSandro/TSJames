@@ -20,7 +20,7 @@ public final class UserData implements Serializable {
     }
 
     @Id
-    @Column(name = "data_id")
+    @Column(name = "user_id")
     @GeneratedValue(generator = "gen")
     @GenericGenerator(name = "gen", strategy = "foreign", parameters = @Parameter(name = "property", value = "user"))
     private long dataId;

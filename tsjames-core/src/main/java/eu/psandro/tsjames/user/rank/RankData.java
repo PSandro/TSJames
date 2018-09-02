@@ -6,13 +6,15 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@Table(name = "rank_indicies")
+@Table(name = "james_rank")
 @EqualsAndHashCode
 public final class RankData implements Serializable {
 
@@ -20,6 +22,7 @@ public final class RankData implements Serializable {
 
     static {
         DEFAULT.setSimpleName("Default");
+        DEFAULT.addPermission("human");
     }
 
     RankData() {
@@ -41,6 +44,14 @@ public final class RankData implements Serializable {
 
     @ElementCollection
     @Column(name = "permissions")
+    @CollectionTable(name = "james_rank_permission")
+    @Getter
     private Set<String> permissions = new HashSet<>();
+
+
+    private void addPermission(@NonNull String permission) {
+        this.permissions.add(permission);
+    }
+
 
 }
