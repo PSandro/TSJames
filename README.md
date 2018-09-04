@@ -6,6 +6,7 @@ Currently the support of following servies is planned:
 * Steam Bot (bot with Steam friendships to the user)
 * ...
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d361f3474eaf4e98a7dd636182dd05aa)](https://app.codacy.com/app/PSandro/TSJames?utm_source=github.com&utm_medium=referral&utm_content=PSandro/TSJames&utm_campaign=Badge_Grade_Settings)
 Master [![Build Status](https://travis-ci.org/PSandro/TSJames.svg?branch=master)](https://travis-ci.org/PSandro/TSJames)
 
 # Features
