@@ -1,11 +1,8 @@
 package eu.psandro.tsjames.io.event;
 
 import eu.psandro.tsjames.api.exception.JamesException;
-import eu.psandro.tsjames.api.exception.JamesPacketAlreadyRegistered;
 import eu.psandro.tsjames.io.protocol.NetPacket;
-import eu.psandro.tsjames.io.protocol.RespondableNetPacket;
 import eu.psandro.tsjames.io.protocol.ResponseSenderHook;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -73,7 +70,6 @@ public class NetEventManager implements Closeable {
         final Method[] methods = listener.getClass().getDeclaredMethods();
         this.registeredListeners.add(listener);
 
-        final Set<JamesException> exceptions = new HashSet<>();
 
         for (final Method method : methods) {
             final NetEvent annotation = method.getAnnotation(NetEvent.class);
@@ -111,7 +107,6 @@ public class NetEventManager implements Closeable {
 
 
                 if (this.packetEventBindings.containsKey(packetClazz)) {
-                    exceptions.add(new JamesPacketAlreadyRegistered(packetClazz));
                     continue;
                 }
 
@@ -125,9 +120,6 @@ public class NetEventManager implements Closeable {
                 eventHandlersForEvent.add(eventHandler);
             }
 
-            for (JamesException throwable : exceptions) {
-                throw throwable;
-            }
         }
     }
 

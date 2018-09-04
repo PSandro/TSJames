@@ -35,7 +35,7 @@ public final class CommandTS extends BotCommand {
             return OPTIONS;
         } else {
             final String command = args[0].toLowerCase();
-            if (command.equals("set")) {
+            if ("set".equals(command)) {
                 if (args.length != 3) return "ts set <field> <value>";
                 final String field = args[1];
                 final String value = args[2];
@@ -71,17 +71,17 @@ public final class CommandTS extends BotCommand {
                         this.teamSpeakConfig.setVServerId(vServerId);
                         return field + " set to " + value;
                 }
-            } else if (command.equals("info")) {
+            } else if ("info".equals(command)) {
                 if (args.length != 1) return "ts info";
                 return "Host: " + this.teamSpeakConfig.getHost() + "\n" +
                         "Username: " + this.teamSpeakConfig.getUsername() + "\n" +
                         "Nickname: " + this.teamSpeakConfig.getNickname() + "\n" +
                         "Port: " + this.teamSpeakConfig.getPort() + "\n" +
                         "vServerId: " + this.teamSpeakConfig.getVServerId() + "\n";
-            } else if (command.equals("status")) {
+            } else if ("status".equals(command)) {
                 if (args.length != 1) return "ts status";
                 return this.teamSpeakConnection.isRunning() ? "TS connection is up." : "TS connection is closed.";
-            } else if (command.equals("connect")) {
+            } else if ("connect".equals(command)) {
                 if (args.length != 1) return "ts connect";
                 try {
                     this.teamSpeakConnection.establish();
@@ -90,11 +90,11 @@ public final class CommandTS extends BotCommand {
                     return "error while establishing ts connection: " + e.getMessage();
                 }
 
-            } else if (command.equals("save")) {
+            } else if ("save".equals(command)) {
                 if (args.length != 1) return "ts save";
                 super.getJamesBot().getConfigManager().saveConfig(this.teamSpeakConfig);
                 return "TeamSpeakConfig saved!";
-            } else if (command.equals("load")) {
+            } else if ("load".equals(command)) {
                 if (args.length != 1) return "ts load";
                 super.getJamesBot().getConfigManager().readConfigTo(this.teamSpeakConfig);
                 return "TeamSpeakConfig loaded!";

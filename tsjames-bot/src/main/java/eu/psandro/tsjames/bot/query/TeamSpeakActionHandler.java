@@ -47,10 +47,12 @@ public class TeamSpeakActionHandler extends TS3EventAdapter {
 
     @Override
     public void onClientJoin(ClientJoinEvent e) {
+        //TODO handle client join
     }
 
     @Override
     public void onClientLeave(ClientLeaveEvent e) {
+        //TODO handle client leave
     }
 
 

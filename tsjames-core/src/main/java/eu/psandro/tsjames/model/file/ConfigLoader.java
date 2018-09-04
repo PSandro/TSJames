@@ -17,8 +17,6 @@ import java.util.stream.Stream;
 public class ConfigLoader<T extends ConfigFile> {
 
     @NonNull
-    private final Class<T> configClazz;
-    @NonNull
     private final ConfigManager configManager;
 
     private final T config;
@@ -27,7 +25,6 @@ public class ConfigLoader<T extends ConfigFile> {
     public ConfigLoader(Class<T> configClazz, ConfigManager configManager) throws Exception {
         if (!this.hasParameterlessConstructor(configClazz))
             throw new JamesException("ConfigFile needs to have a parameterless constructor for the ConfigLoader!");
-        this.configClazz = configClazz;
         this.configManager = configManager;
         this.config = configClazz.getConstructor().newInstance();
     }

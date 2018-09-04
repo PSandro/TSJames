@@ -38,7 +38,7 @@ public final class CommandDB extends Command {
             return OPTIONS;
         } else {
             final String command = args[0].toLowerCase();
-            if (command.equals("set")) {
+            if ("set".equals(command)) {
                 if (args.length != 3) return "db set <field> <value>";
                 final String field = args[1];
                 final String value = args[2];
@@ -53,7 +53,7 @@ public final class CommandDB extends Command {
                         this.databaseConfig.setUrl(value);
                         return field + " set to " + value;
                 }
-            } else if (command.equals("get")) {
+            } else if ("get".equals(command)) {
                 if (args.length != 2) return "db get <field>";
                 final String field = args[1].toLowerCase();
                 switch (field) {
@@ -63,7 +63,7 @@ public final class CommandDB extends Command {
                         return "Value: " + this.databaseConfig.getUrl();
                 }
                 return "Field not found!";
-            } else if (command.equals("buildurl")) {
+            } else if ("build".equals(command)) {
                 if (args.length != 4) return "buildURL <host> <port> <database>";
                 final String host = args[1], database = args[3];
                 final int port;
@@ -75,10 +75,10 @@ public final class CommandDB extends Command {
                 this.databaseConfig.setUrl(host, port, database);
                 return "URL set!";
 
-            } else if (command.equals("status")) {
+            } else if ("status".equals(command)) {
                 if (args.length != 1) return "db status";
                 return this.databaseManager.isOpen() ? "DB connection is up." : "DB connection is closed.";
-            } else if (command.equals("connect")) {
+            } else if ("connect".equals(command)) {
                 if (args.length != 1) return "db connect";
                 try {
                     this.databaseConnection.establish();
@@ -87,11 +87,11 @@ public final class CommandDB extends Command {
                     return "error while establishing db connection: " + e.getMessage();
                 }
 
-            } else if (command.equals("save")) {
+            } else if ("save".equals(command)) {
                 if (args.length != 1) return "db save";
                 this.configManager.saveConfig(this.databaseConfig);
                 return "DatabaseConfig saved!";
-            } else if (command.equals("load")) {
+            } else if ("load".equals(command)) {
                 if (args.length != 1) return "db load";
                 this.configManager.readConfigTo(this.databaseConfig);
                 return "DatabaseConfig loaded!";

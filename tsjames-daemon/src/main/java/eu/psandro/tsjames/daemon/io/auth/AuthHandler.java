@@ -37,7 +37,7 @@ public final class AuthHandler extends SimpleChannelInboundHandler<AuthRequest> 
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, AuthRequest request) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, AuthRequest request) {
 
 
         AuthResponse authResponse = null;

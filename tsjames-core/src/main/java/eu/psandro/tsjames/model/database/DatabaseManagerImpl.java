@@ -19,8 +19,7 @@ import java.util.logging.Level;
 public final class DatabaseManagerImpl implements DatabaseManager {
 
 
-    private @NonNull
-    Optional<SessionFactory> sessionFactory = Optional.empty();
+    private SessionFactory sessionFactory = null;
 
 
     public DatabaseManagerImpl() {
@@ -49,7 +48,7 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     }
 
     public DatabaseManagerImpl init(final @NonNull SessionFactory sessionFactory) {
-        this.sessionFactory = Optional.of(sessionFactory);
+        this.sessionFactory = sessionFactory;
         this.createDefaults();
         return this;
     }
@@ -193,18 +192,21 @@ public final class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public boolean isOpen() {
-        return this.sessionFactory.isPresent() && this.sessionFactory.get().isOpen();
+        return this.sessionFactory != null && this.sessionFactory.isOpen();
     }
 
 
     private Session openSession() throws JamesNotInitException {
-        return this.sessionFactory.orElseThrow(() -> new JamesNotInitException("SessionFactory")).openSession();
+        if (this.sessionFactory == null) throw new JamesNotInitException("SessionFactory");
+        return this.sessionFactory.openSession();
     }
 
 
     @Override
     public void close() {
-        this.sessionFactory.ifPresent(SessionFactory::close);
-        this.sessionFactory = Optional.empty();
+        if (this.sessionFactory != null) {
+            this.sessionFactory.close();
+            this.sessionFactory = null;
+        }
     }
 }

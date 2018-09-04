@@ -1,11 +1,8 @@
 package eu.psandro.tsjames.io;
 
-import eu.psandro.tsjames.io.auth.NetSubject;
 import eu.psandro.tsjames.io.protocol.NetPacket;
 import io.netty.bootstrap.Bootstrap;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 
 import java.util.Set;
 

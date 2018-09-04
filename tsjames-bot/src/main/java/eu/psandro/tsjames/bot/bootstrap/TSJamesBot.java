@@ -4,7 +4,6 @@ import eu.psandro.tsjames.bootstrap.JamesConsoleBootstrap;
 import eu.psandro.tsjames.controller.console.command.impl.CommandDB;
 import eu.psandro.tsjames.bot.controller.command.CommandTS;
 import eu.psandro.tsjames.controller.console.command.impl.CommandNetClient;
-import eu.psandro.tsjames.io.AbstractNetClient;
 import eu.psandro.tsjames.io.NetClientImpl;
 import eu.psandro.tsjames.model.file.NetClientConfig;
 import eu.psandro.tsjames.io.ManagedConnection;
@@ -23,7 +22,7 @@ public final class TSJamesBot extends JamesConsoleBootstrap {
 
     @Getter
     private final ManagedConnection databaseConnection, teamSpeakConnection;
-    final ConfigLoader<NetClientConfig> clientConfig;
+    private final ConfigLoader<NetClientConfig> clientConfig;
 
     @Getter
     private NetClientImpl netClient = new NetClientImpl();

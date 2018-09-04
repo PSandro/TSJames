@@ -2,10 +2,7 @@ package eu.psandro.tsjames.daemon.bootstrap;
 
 import eu.psandro.tsjames.bootstrap.JamesConsoleBootstrap;
 import eu.psandro.tsjames.daemon.controller.command.ServerPingCommand;
-import eu.psandro.tsjames.daemon.io.AbstractNetServer;
 import eu.psandro.tsjames.daemon.io.NetServerImpl;
-
-import java.io.IOException;
 
 /**
  * @author PSandro on 30.08.18

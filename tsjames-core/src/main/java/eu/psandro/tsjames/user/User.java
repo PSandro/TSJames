@@ -11,13 +11,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
 @Entity
 @Table(name = "james_user")
 public class User implements Serializable {
-
-    User() {
-    }
 
 
     @Id
@@ -48,6 +46,7 @@ public class User implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Setter
     private RankData userRank;
+
 
     protected User(@NonNull String username, @NonNull String email, @NonNull String passwordHash) {
         this.username = username;

@@ -3,7 +3,6 @@ package eu.psandro.tsjames.controller.console.command;
 import eu.psandro.tsjames.bootstrap.JamesBootstrap;
 import eu.psandro.tsjames.controller.console.command.impl.ExitCommand;
 import eu.psandro.tsjames.controller.console.command.impl.HelpCommand;
-import eu.psandro.tsjames.controller.console.command.impl.PingCommand;
 import lombok.NonNull;
 
 import java.util.Arrays;

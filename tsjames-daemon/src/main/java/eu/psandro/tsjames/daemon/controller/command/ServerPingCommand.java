@@ -2,12 +2,10 @@ package eu.psandro.tsjames.daemon.controller.command;
 
 import eu.psandro.tsjames.controller.console.command.Command;
 import eu.psandro.tsjames.daemon.io.NetServerImpl;
-import eu.psandro.tsjames.daemon.io.SessionManager;
 import eu.psandro.tsjames.io.auth.NetSubject;
 import eu.psandro.tsjames.io.packet.PacketPing;
 import eu.psandro.tsjames.io.protocol.NetPacket;
 import eu.psandro.tsjames.io.protocol.ResponseCall;
-import io.netty.channel.Channel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

@@ -32,11 +32,11 @@ public abstract class NetPacket {
         this.packetId = packetId;
     }
 
-    ByteBuf deepWrite() {
+    protected ByteBuf deepWrite() {
         return this.write();
     }
 
-    void deepRead(ByteBuf data) {
+    protected void deepRead(ByteBuf data) {
         this.read(data);
     }
 

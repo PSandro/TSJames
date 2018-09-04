@@ -6,7 +6,6 @@ import eu.psandro.tsjames.io.protocol.NetPacket;
 import eu.psandro.tsjames.io.protocol.RespondableNetPacket;
 import eu.psandro.tsjames.io.protocol.ResponseManager;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;

@@ -19,7 +19,7 @@ public final class NetPacketEncoder extends MessageToByteEncoder<NetPacket> {
     NetSubject local;
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, NetPacket msg, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, NetPacket msg, ByteBuf out) {
         if (msg == null) return;
         assert this.local != null;
         if (!(this.local.equals(msg.getSender()))) {
