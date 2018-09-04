@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Entity
 @Getter
 @Table(name = "james_rank")
@@ -23,8 +24,6 @@ public final class RankData implements Serializable {
         DEFAULT.addPermission("human");
     }
 
-    RankData() {
-    }
 
     @Id
     @GeneratedValue(generator = "increment")

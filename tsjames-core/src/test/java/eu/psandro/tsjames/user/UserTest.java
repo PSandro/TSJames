@@ -16,15 +16,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserTest {
 
     private static DatabaseManager databaseManager;
-    private static RankData defaultRank = RankData.DEFAULT;
 
     @BeforeAll
-    static void setUp() {
+    private static void setUp() {
         databaseManager = RepositoryUtil.createTestDatabaseManager(User.class, UserData.class, RankData.class);
     }
 
     @AfterAll
-    static void tearDown() throws IOException {
+    private static void tearDown() throws IOException {
         databaseManager.close();
     }
 
@@ -35,7 +34,6 @@ class UserTest {
         final String username = "test";
 
         final User user = databaseManager.createUser(username, UUID.randomUUID().toString(), UUID.randomUUID().toString());
-
 
 
         assertEquals(username, user.getUsername());

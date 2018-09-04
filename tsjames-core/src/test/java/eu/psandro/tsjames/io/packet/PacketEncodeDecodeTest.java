@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author PSandro on 26.08.18
  * @project tsjames
  */
-class PacketEncodeDecodeTest {
+public class PacketEncodeDecodeTest {
 
 
     private final PacketRegistry packetRegistry = new PacketRegistry();

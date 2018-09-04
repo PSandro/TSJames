@@ -65,7 +65,8 @@ public final class CommandDB extends Command {
                 return "Field not found!";
             } else if ("build".equals(command)) {
                 if (args.length != 4) return "buildURL <host> <port> <database>";
-                final String host = args[1], database = args[3];
+                final String host = args[1];
+                final String database = args[3];
                 final int port;
                 try {
                     port = Integer.parseInt(args[2]);

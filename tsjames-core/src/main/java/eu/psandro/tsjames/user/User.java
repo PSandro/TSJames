@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Getter
 @Entity
 @Table(name = "james_user")

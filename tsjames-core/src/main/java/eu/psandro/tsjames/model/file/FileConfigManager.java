@@ -22,9 +22,6 @@ public final class FileConfigManager extends ConfigManager {
     private final JsonParser parser = new JsonParser();
 
 
-    public FileConfigManager() {
-    }
-
     @Override
     public boolean createSources() {
         if (!FOLDER.exists()) {

@@ -11,13 +11,13 @@ import java.util.Date;
 import java.util.Objects;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Getter
 @Entity
 @Table(name = "james_user_data")
 public final class UserData implements Serializable {
 
-    UserData() {
-    }
+
 
     @Id
     @Column(name = "user_id")

@@ -20,7 +20,7 @@ public final class AuthManager {
     @NonNull
     private final AuthCredentials credentials;
 
-    void setAuthResponse(AuthResponse authResponse) {
+    protected void setAuthResponse(AuthResponse authResponse) {
         this.authResponse = authResponse;
         this.latch.countDown();
     }

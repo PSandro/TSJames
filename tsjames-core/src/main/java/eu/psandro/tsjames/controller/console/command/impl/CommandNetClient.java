@@ -39,7 +39,7 @@ public final class CommandNetClient extends Command {
             return OPTIONS;
         } else {
             final String command = args[0].toLowerCase();
-            if (command.equals("set")) {
+            if ("set".equals(command)) {
                 if (args.length != 3) return "net set <field> <value>";
                 final String field = args[1];
                 final String value = args[2];
@@ -64,17 +64,17 @@ public final class CommandNetClient extends Command {
                         this.config.setPort(port);
                         return field + " set to " + value;
                 }
-            } else if (command.equals("info")) {
+            } else if ("info".equals(command)) {
                 if (args.length != 1) return "net info";
                 return "Info: \n"
                         + "Host: " + this.config.getHost() + "\n"
                         + "Port: " + this.config.getPort() + "\n"
                         + "User: " + this.config.getUser() + "\n";
-            } else if (command.equals("status")) {
+            } else if ("status".equals(command)) {
                 if (args.length != 1) return "net status";
                 if (this.connection == null) return "NetClient is not initialized!";
                 return this.connection.isRunning() ? "NetClient is running!" : "NetClient is closed.";
-            } else if (command.equals("connect")) {
+            } else if ("connect".equals(command)) {
                 if (args.length != 1) return "net connect";
                 if (this.connection == null) return "NetClient is not initialized!";
                 try {
@@ -83,11 +83,11 @@ public final class CommandNetClient extends Command {
                 } catch (InterruptedException e) {
                     return "error while establishing db connection: " + e.getMessage();
                 }
-            } else if (command.equals("save")) {
+            } else if ("save".equals(command)) {
                 if (args.length != 1) return "net save";
                 this.configManager.saveConfig(this.config);
                 return "NetClientConfig saved!";
-            } else if (command.equals("load")) {
+            } else if ("load".equals(command)) {
                 if (args.length != 1) return "net load";
                 try {
                     this.configManager.readConfigTo(this.config).get().get(2, TimeUnit.SECONDS);

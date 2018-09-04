@@ -31,12 +31,7 @@ public final class ServerPingCommand extends Command {
             }
 
             final PacketPing packetPing = new PacketPing();
-            packetPing.setResponseCall(new ResponseCall() {
-                @Override
-                public void onCall(NetPacket netPacket) {
-                    System.out.println("Pong!");
-                }
-            });
+            packetPing.setResponseCall(netPacket -> System.out.println("Pong!"));
             this.server.sendPacket(NetSubject.byId(id), packetPing);
             return "ping request sent!";
 

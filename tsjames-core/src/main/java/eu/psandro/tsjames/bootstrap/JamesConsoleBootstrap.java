@@ -41,6 +41,6 @@ public abstract class JamesConsoleBootstrap extends JamesBootstrap {
     @Override
     public void shutdown() {
         this.prepareShutdown();
-        System.exit(0);
+        Runtime.getRuntime().exit(0);
     }
 }

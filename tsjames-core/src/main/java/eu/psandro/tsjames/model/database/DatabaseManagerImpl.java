@@ -1,8 +1,10 @@
 package eu.psandro.tsjames.model.database;
 
 import eu.psandro.tsjames.api.exception.JamesNotInitException;
+import eu.psandro.tsjames.user.User;
+import eu.psandro.tsjames.user.UserData;
+import eu.psandro.tsjames.user.UserFactory;
 import eu.psandro.tsjames.user.rank.RankData;
-import eu.psandro.tsjames.user.*;
 import lombok.NonNull;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -11,19 +13,16 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 
-import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
+
 
 public final class DatabaseManagerImpl implements DatabaseManager {
 
 
     private SessionFactory sessionFactory = null;
 
-
-    public DatabaseManagerImpl() {
-    }
 
     @Override
     public DatabaseManagerImpl init(final DatabaseAccessData accessData) throws HibernateException {
