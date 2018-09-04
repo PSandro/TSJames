@@ -24,14 +24,14 @@ public abstract class RespondableNetPacket extends NetPacket {
     ResponseCall responseCall;
 
     @Override
-    ByteBuf deepWrite() {
+    protected ByteBuf deepWrite() {
         return super.deepWrite()
                 .writeInt(this.respondId)
                 .writeInt(this.responseTarget.getId());
     }
 
     @Override
-    void deepRead(ByteBuf data) {
+    protected void deepRead(ByteBuf data) {
         super.deepRead(data);
         if (data.readableBytes() < 8) throw new JamesIOReadException("Insufficient bytes!");
         this.respondId = data.readInt();
